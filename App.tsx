@@ -8,6 +8,7 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Image,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -29,6 +30,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SettingsScreen from './src/screens/SettingsScreen';
+import LocationScreen from './src/screens/LocationScreen';
 
 // type SectionProps = PropsWithChildren<{
 //   title: string;
@@ -103,9 +105,121 @@ function App(): JSX.Element {
     // );
 
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: {
+            backgroundColor: 'rgba(198, 185, 229, 1)',
+
+            height: 90,
+            ...styles.bottomBar,
+          },
+        }}>
+        <Tab.Screen
+          name="Location Screen"
+          component={LocationScreen}
+          options={{
+            tabBarShowLabel: false,
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: 15,
+                }}>
+                <Image
+                  resizeMode={'contain'}
+                  source={
+                    focused
+                      ? require('./src/img/bottomIcon/locationPressed.png')
+                      : require('./src/img/bottomIcon/location.png')
+                  }
+                  style={
+                    focused
+                      ? {width: 25, height: 25, top: -5}
+                      : {width: 25, height: 25}
+                  }
+                />
+                <Text
+                  style={{
+                    fontWeight: focused ? '600' : '300',
+                  }}>
+                  Location
+                </Text>
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            tabBarShowLabel: false,
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: 15,
+                }}>
+                <Image
+                  resizeMode={'contain'}
+                  source={
+                    focused
+                      ? require('./src/img/bottomIcon/pressedHome.png')
+                      : require('./src/img/bottomIcon/NonPressedHome.png')
+                  }
+                  style={
+                    focused
+                      ? {width: 25, height: 25, top: -5}
+                      : {width: 25, height: 25}
+                  }
+                />
+                <Text
+                  style={{
+                    fontWeight: focused ? '600' : '300',
+                  }}>
+                  Home
+                </Text>
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{
+            tabBarShowLabel: false,
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: 15,
+                }}>
+                <Image
+                  resizeMode={'contain'}
+                  source={
+                    focused
+                      ? require('./src/img/bottomIcon/settingPressed.png')
+                      : require('./src/img/bottomIcon/setting.png')
+                  }
+                  style={
+                    focused
+                      ? {width: 25, height: 25, top: -5}
+                      : {width: 25, height: 25}
+                  }
+                />
+                <Text
+                  style={{
+                    fontWeight: focused ? '600' : '300',
+                  }}>
+                  Setting
+                </Text>
+              </View>
+            ),
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
@@ -129,5 +243,16 @@ function App(): JSX.Element {
 //     fontWeight: '700',
 //   },
 // });
-
+const styles = StyleSheet.create({
+  bottomBar: {
+    shadowColor: '#7F5DF0',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+    elevation: 5,
+  },
+});
 export default App;

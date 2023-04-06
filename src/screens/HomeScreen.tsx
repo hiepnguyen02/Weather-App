@@ -4,30 +4,87 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  Touchable,
   View,
 } from 'react-native';
 import React from 'react';
 import HourlyWeatherButton from '../components/HourlyWeatherButton';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {NavigationContainer} from '@react-navigation/native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import GetCurrentLocation from '../../services/getLocationService';
+import GetLocationId from '../../services/getLocationId';
+import GetLocationService from '../../services/getLocationService';
+import {getCurrentPosition} from '@react-native-community/geolocation/lib/typescript/implementation';
+import getLocationId from '../../services/getLocationId';
+const TopTab = createMaterialTopTabNavigator();
 
-function HomeScreen() {
+function Hourly() {
   return (
-    <SafeAreaView>
-      <ImageBackground
-        source={require('../img/Background/home_background.png')}
-        style={styles.container}>
-        <Text style={styles.locationText}>Cochabamba</Text>
-        <Text style={styles.temperatureText}>19°</Text>
-        <Text style={styles.skyText}>Mostly Clear</Text>
-        <Text style={styles.lowHighTemp}>L:19° H:29°</Text>
-        {/* <HourlyWeatherButton /> */}
-      </ImageBackground>
-    </SafeAreaView>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}>
+      <HourlyWeatherButton />
+      <HourlyWeatherButton />
+      <HourlyWeatherButton />
+      <HourlyWeatherButton />
+      <HourlyWeatherButton />
+    </View>
+  );
+}
+function Weekly() {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        margin: 10,
+      }}>
+      <HourlyWeatherButton />
+      <HourlyWeatherButton />
+      <HourlyWeatherButton />
+      <HourlyWeatherButton />
+      <HourlyWeatherButton />
+    </View>
+  );
+}
+function HomeScreen() {
+  // const location = GetCurrentLocation();
+  const position = getLocationId();
+
+  return (
+    <ImageBackground source={require('../img/Background/home_background.png')}>
+      <SafeAreaView style={styles.container}>
+        <View
+          style={{justifyContent: 'center', alignItems: 'center', top: 100}}>
+          <Text style={styles.locationText}>Cochabamba</Text>
+          <Text style={styles.temperatureText}>19°</Text>
+          <Text style={styles.skyText}>Mostly Clear</Text>
+          <Text style={styles.lowHighTemp}>L:19° H:29°</Text>
+        </View>
+
+        <View
+          style={{
+            width: '100%',
+            height: 210,
+          }}>
+          <TopTab.Navigator>
+            <TopTab.Screen name={'Hourly'} component={Hourly} />
+            <TopTab.Screen name={'Weekly'} component={Weekly} />
+          </TopTab.Navigator>
+        </View>
+      </SafeAreaView>
+      {/* <HourlyWeatherButton /> */}
+    </ImageBackground>
   );
 }
 export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
     height: '100%',
