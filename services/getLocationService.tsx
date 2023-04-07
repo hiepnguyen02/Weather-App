@@ -3,12 +3,7 @@ import {View, Text} from 'react-native';
 import Geolocation, {
   GeolocationResponse,
 } from '@react-native-community/geolocation';
-
-interface LocationData {
-  latitude: number;
-  longitude: number;
-  accuracy: number;
-}
+import LocationData from '../model/LocationData';
 
 function GetCurrentLocation() {
   const [location, setLocation] = React.useState<LocationData>();

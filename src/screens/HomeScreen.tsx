@@ -18,6 +18,9 @@ import GetLocationId from '../../services/getLocationId';
 import GetLocationService from '../../services/getLocationService';
 import {getCurrentPosition} from '@react-native-community/geolocation/lib/typescript/implementation';
 import getLocationId from '../../services/getLocationId';
+import getCurrentWeather from '../../services/getCurrentWeather';
+import getLocationService from '../../services/getLocationService';
+import GetCurrentWeather from '../../services/getCurrentWeather';
 const TopTab = createMaterialTopTabNavigator();
 
 function Hourly() {
@@ -52,8 +55,7 @@ function Weekly() {
   );
 }
 function HomeScreen() {
-  // const location = GetCurrentLocation();
-  const position = getLocationId();
+  const currentCondition = GetLocationId();
 
   return (
     <ImageBackground source={require('../img/Background/home_background.png')}>
@@ -62,7 +64,7 @@ function HomeScreen() {
           style={{justifyContent: 'center', alignItems: 'center', top: 100}}>
           <Text style={styles.locationText}>Cochabamba</Text>
           <Text style={styles.temperatureText}>19°</Text>
-          <Text style={styles.skyText}>Mostly Clear</Text>
+          <Text style={styles.skyText}>{currentCondition}</Text>
           <Text style={styles.lowHighTemp}>L:19° H:29°</Text>
         </View>
 

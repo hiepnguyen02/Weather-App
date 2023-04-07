@@ -1,0 +1,12 @@
+{
+    "eslint.notebooks.rules.customizations": [
+    
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.validate": [
+        "javascript"
+    ],
+    "java.compile.nullAnalysis.mode": "automatic"
+}
