@@ -1,26 +1,25 @@
 import {
-  Image,
   ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
-  Touchable,
   View,
+  Button,
+  PanResponder,
+  Animated,
+  ScrollView,
 } from 'react-native';
-import React from 'react';
+import React, {useRef} from 'react';
 import HourlyWeatherButton from '../components/HourlyWeatherButton';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import Humidity from '../components/Humidity';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {NavigationContainer} from '@react-navigation/native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import GetCurrentLocation from '../../services/getLocationService';
-import GetLocationId from '../../services/getLocationId';
-import GetLocationService from '../../services/getLocationService';
-import {getCurrentPosition} from '@react-native-community/geolocation/lib/typescript/implementation';
-import getLocationId from '../../services/getLocationId';
+import RBSheet from 'react-native-raw-bottom-sheet';
 import getCurrentWeather from '../../services/getCurrentWeather';
-import getLocationService from '../../services/getLocationService';
-import GetCurrentWeather from '../../services/getCurrentWeather';
+
+import GetForecastDay from '../../services/getForecastDay';
+import BottomDrawer from 'react-native-bottom-drawer-view';
+import {HumidityIcon, Moon} from '../img';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 const TopTab = createMaterialTopTabNavigator();
 
 function Hourly() {
@@ -29,6 +28,7 @@ function Hourly() {
       style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
+        margin: 10,
       }}>
       <HourlyWeatherButton />
       <HourlyWeatherButton />
@@ -54,30 +54,98 @@ function Weekly() {
     </View>
   );
 }
-function HomeScreen() {
-  const currentCondition = GetLocationId();
+
+function HomeScreen(this: any) {
+  const currentCondition = getCurrentWeather();
+  const forecastDay = GetForecastDay();
 
   return (
-    <ImageBackground source={require('../img/Background/home_background.png')}>
+    <ImageBackground
+      source={require('../img/Background/home_day_background.png')}>
       <SafeAreaView style={styles.container}>
-        <View
-          style={{justifyContent: 'center', alignItems: 'center', top: 100}}>
-          <Text style={styles.locationText}>Cochabamba</Text>
-          <Text style={styles.temperatureText}>19°</Text>
-          <Text style={styles.skyText}>{currentCondition}</Text>
-          <Text style={styles.lowHighTemp}>L:19° H:29°</Text>
-        </View>
+        <ScrollView>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={styles.locationText}>{currentCondition?.name}</Text>
+            <Text style={styles.temperatureText}>
+              {currentCondition?.temp_c}°
+            </Text>
+            <Text style={styles.skyText}>
+              {currentCondition?.condition_text}
+            </Text>
+            <Text style={styles.lowHighTemp}>
+              Thấp nhất:{forecastDay?.minTemp_c}° Cao nhất:
+              {forecastDay?.maxTemp_c}°
+            </Text>
+            <View style={{marginTop: 7}}>
+              <View style={{flexDirection: 'row', alignContent: 'center'}}>
+                {/*<Humidity width={25} height={25} />*/}
+              </View>
+            </View>
+          </View>
 
-        <View
-          style={{
-            width: '100%',
-            height: 210,
-          }}>
-          <TopTab.Navigator>
-            <TopTab.Screen name={'Hourly'} component={Hourly} />
-            <TopTab.Screen name={'Weekly'} component={Weekly} />
-          </TopTab.Navigator>
-        </View>
+          <View
+            style={{
+              width: '100%',
+              height: 212,
+            }}>
+            <TopTab.Navigator
+              screenOptions={{
+                tabBarStyle: {
+                  backgroundColor: 'transparent',
+                },
+                tabBarShowLabel: false,
+              }}
+              sceneContainerStyle={{backgroundColor: 'transparent'}}>
+              <TopTab.Screen
+                name={'Hourly'}
+                component={Hourly}
+                options={{
+                  tabBarIcon: ({focused}) => (
+                    <Text
+                      style={{
+                        fontWeight: focused ? '600' : '300',
+                        fontSize: 16,
+                        color: 'white',
+                      }}>
+                      Hourly Forecast
+                    </Text>
+                  ),
+                  tabBarIconStyle: {
+                    flexWrap: 'wrap',
+                    width: '100%',
+                    justifyContent: 'center',
+                  },
+                }}
+              />
+              <TopTab.Screen
+                name={'Weekly'}
+                component={Weekly}
+                options={{
+                  tabBarIcon: ({focused}) => (
+                    <Text
+                      style={{
+                        fontWeight: focused ? '600' : '300',
+                        fontSize: 16,
+                        color: 'white',
+                      }}>
+                      Weekly Forecast
+                    </Text>
+                  ),
+                  tabBarIconStyle: {
+                    flexWrap: 'wrap',
+                    width: '100%',
+                    justifyContent: 'center',
+                  },
+                }}
+              />
+            </TopTab.Navigator>
+          </View>
+          <Humidity />
+        </ScrollView>
       </SafeAreaView>
       {/* <HourlyWeatherButton /> */}
     </ImageBackground>
@@ -86,10 +154,9 @@ function HomeScreen() {
 export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
     height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
   locationText: {
     color: '#FFFF',

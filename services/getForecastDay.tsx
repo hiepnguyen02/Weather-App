@@ -3,10 +3,10 @@ import axios from 'axios';
 import GetCurrentLocation from './getLocationService';
 import LocationData from '../model/LocationData';
 import CurrentCondition from '../model/CurrentCondition';
+import ForecastDay from '../model/ForecastDay';
 
-function GetCurrentWeather() {
-  const [currentCondition, setCurrentCondition] =
-    React.useState<CurrentCondition>();
+function GetForecastDay() {
+  const [forecastDay, setForecastDay] = React.useState<ForecastDay>();
 
   const latLong = GetCurrentLocation();
   useEffect(() => {
@@ -15,7 +15,7 @@ function GetCurrentWeather() {
 
   const fetchData = async (latLong: LocationData | undefined) => {
     await axios
-      .get('https://api.weatherapi.com/v1/current.json', {
+      .get('https://api.weatherapi.com/v1/forecast.json', {
         params: {
           key: 'a95ac2295269448094c170846231903',
           q: `${latLong?.latitude},${latLong?.longitude}`,
@@ -23,16 +23,19 @@ function GetCurrentWeather() {
         },
       })
       .then(response => {
-        setCurrentCondition({
-          condition_text: response.data.current.condition.text,
-          temp_c: Math.round(parseInt(response.data.current.temp_c)),
-          name: response.data.location.name,
+        setForecastDay({
+          maxTemp_c: Math.round(
+            parseInt(response.data.forecast.forecastday[0].day.maxtemp_c),
+          ),
+          minTemp_c: parseInt(
+            response.data.forecast.forecastday[0].day.mintemp_c,
+          ),
         });
       })
       .catch(error => {
         console.error('Network error:', error);
       });
   };
-  return currentCondition;
+  return forecastDay;
 }
-export default GetCurrentWeather;
+export default GetForecastDay;

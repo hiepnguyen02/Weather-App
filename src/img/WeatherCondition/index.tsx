@@ -1,2 +1,3 @@
 import Moon from './Moon.svg';
-export {Moon};
+import HumidityIcon from './HumidityIcon.svg';
+export {Moon, HumidityIcon};
