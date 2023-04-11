@@ -20,6 +20,7 @@ function GetCurrentWeather() {
           key: 'a95ac2295269448094c170846231903',
           q: `${latLong?.latitude},${latLong?.longitude}`,
           lang: 'vi',
+          aqi: 'yes',
         },
       })
       .then(response => {

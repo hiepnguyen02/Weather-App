@@ -8,7 +8,8 @@ import HourlyWeather from '../model/HourlyWeather';
 import hourlyWeather from '../model/HourlyWeather';
 
 function GetForecastDay() {
-  const [forecastDay, setForecastDay] = React.useState<ForecastDay>();
+  const forecastDayArr: ForecastDay[] = [];
+  const [forecastDay, setForecastDay] = React.useState<ForecastDay[]>();
   const hourlyForecastArr: HourlyWeather[] = [];
   const [hourlyForecast, setHourlyForecast] = React.useState<HourlyWeather[]>();
 
@@ -28,14 +29,26 @@ function GetForecastDay() {
         },
       })
       .then(response => {
-        setForecastDay({
-          maxTemp_c: Math.round(
-            parseInt(response.data.forecast.forecastday[0].day.maxtemp_c),
-          ),
-          minTemp_c: parseInt(
-            response.data.forecast.forecastday[0].day.mintemp_c,
-          ),
+        // setForecastDay({
+        //   weeklyForecast: {avgTemp_c: 0, date: ''},
+        //   maxTemp_c: Math.round(
+        //     parseInt(response.data.forecast.forecastday[0].day.maxtemp_c),
+        //   ),
+        //   minTemp_c: parseInt(
+        //     response.data.forecast.forecastday[0].day.mintemp_c,
+        //   ),
+        // });
+        response.data.forecast.forecastday.map(a => {
+          forecastDayArr.push({
+            condition_code: a.day.condition.code,
+            maxTemp_c: a.day.maxtemp_c,
+            minTemp_c: a.day.mintemp_c,
+            date: a.date,
+            avgTemp_c: a.day.avgtemp_c,
+          });
         });
+        setForecastDay(forecastDayArr);
+
         response.data.forecast.forecastday[0].hour.map(a => {
           hourlyForecastArr.push({
             time: a.time,

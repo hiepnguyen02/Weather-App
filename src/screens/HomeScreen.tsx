@@ -16,46 +16,64 @@ import getCurrentWeather from '../../services/getCurrentWeather';
 import GetForecastDay from '../../services/getForecastDay';
 import HourlyWeather from '../../model/HourlyWeather';
 import GetFutureWeather from '../../services/getFutureWeather';
+import ForecastDay from '../../model/ForecastDay';
 
 const TopTab = createMaterialTopTabNavigator();
 
 function Hourly(hourlyWeather: HourlyWeather[]) {
   const time = parseInt(hourlyWeather[1].slice(11, 13));
-  console.log(hourlyWeather[0]);
-  // hourlyWeather[0].map(a => {
-  //   a.time.slice(11, 13);
-  // });
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        margin: 10,
-      }}>
-      {hourlyWeather[0].map(a =>
-        a.time.slice(11, 13) > time && a.time.slice(11, 13) - time < 6 ? (
+    <ScrollView
+      horizontal={true}
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{paddingLeft: 8}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        {hourlyWeather[0].map(a =>
+          a.time.slice(11, 13) > time ? (
+            <HourlyWeatherButton
+              // time={a.time}
+              // temp_c={a.temp_c}
+              // condition_code={a.condition_code}
+              hourlyWeather={a}
+              key={parseInt(a.time.slice(11, 13))}
+              isHourlyButton={true}
+            />
+          ) : null,
+        )}
+      </View>
+    </ScrollView>
+  );
+}
+function Weekly(dayForecast: ForecastDay[]) {
+  return (
+    <ScrollView
+      horizontal={true}
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{paddingLeft: 8}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        {dayForecast[0].map(a => (
           <HourlyWeatherButton
             // time={a.time}
             // temp_c={a.temp_c}
             // condition_code={a.condition_code}
             hourlyWeather={a}
-            key={parseInt(a.time.slice(11, 13))}
+            key={parseInt(a.date.slice(8, 10))}
+            isHourlyButton={false}
           />
-        ) : null,
-      )}
-    </View>
-  );
-}
-function Weekly() {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        margin: 10,
-      }}
-    />
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
@@ -106,15 +124,24 @@ function HomeScreen(this: any) {
     } else {
       setBackGround(require('../img/Background/home_background.png'));
     }
-  }, [clear_day, cloudy_day, code, day, rainy_day]);
+  }, [
+    clear_day,
+    clear_night,
+    cloudy_day,
+    cloudy_night,
+    code,
+    day,
+    rainy_day,
+    rainy_night,
+  ]);
   // console.log(typeof require('../img/Background/rainy_night.jpg'));
   // console.log(hourlyForecast);
   // @ts-ignore
   // @ts-ignore
   // @ts-ignore
-  const futureWeather = GetFutureWeather();
+
   return (
-    <ImageBackground source={backGround}>
+    <ImageBackground source={backGround!}>
       <SafeAreaView style={styles.container}>
         <ScrollView style={{marginTop: 20}}>
           <View
@@ -130,8 +157,10 @@ function HomeScreen(this: any) {
               {currentCondition?.condition_text}
             </Text>
             <Text style={styles.lowHighTemp}>
-              Thấp nhất:{forecastDay?.minTemp_c}° Cao nhất:
-              {forecastDay?.maxTemp_c}°
+              Thấp nhất:
+              {Math.round(forecastDay ? forecastDay[0].minTemp_c : null)}° Cao
+              nhất:
+              {Math.round(forecastDay ? forecastDay[0].maxTemp_c : null)}°
             </Text>
             <View style={{marginTop: 7}}>
               <View style={{flexDirection: 'row', alignContent: 'center'}}>
@@ -168,7 +197,7 @@ function HomeScreen(this: any) {
                         fontSize: 16,
                         color: 'white',
                       }}>
-                      Hourly Forecast
+                      Theo giờ
                     </Text>
                   ),
                   tabBarIconStyle: {
@@ -189,7 +218,6 @@ function HomeScreen(this: any) {
               </TopTab.Screen>
               <TopTab.Screen
                 name={'Weekly'}
-                component={Weekly}
                 options={{
                   tabBarIcon: ({focused}) => (
                     <Text
@@ -198,7 +226,7 @@ function HomeScreen(this: any) {
                         fontSize: 16,
                         color: 'white',
                       }}>
-                      Weekly Forecast
+                      Theo tuần
                     </Text>
                   ),
                   tabBarIconStyle: {
@@ -206,8 +234,17 @@ function HomeScreen(this: any) {
                     width: '100%',
                     justifyContent: 'center',
                   },
-                }}
-              />
+                }}>
+                {props =>
+                  forecastDay != undefined ? (
+                    <Weekly
+                      // time={currentCondition?.time}
+                      {...[forecastDay]}
+                      // time={currentCondition?.time}
+                    />
+                  ) : null
+                }
+              </TopTab.Screen>
             </TopTab.Navigator>
           </View>
           <View style={{marginTop: 10, marginLeft: 12, marginBottom: 12}}>
@@ -220,7 +257,11 @@ function HomeScreen(this: any) {
               Thông tin chi tiết
             </Text>
           </View>
-          <Humidity />
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Humidity />
+            <Humidity />
+            <Humidity />
+          </View>
         </ScrollView>
       </SafeAreaView>
       {/* <HourlyWeatherButton /> */}

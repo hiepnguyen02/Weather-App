@@ -15,15 +15,25 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import HourlyWeather from '../../model/HourlyWeather';
 
-function HourlyWeatherButton(hourlyWeather: any, key: any) {
+function HourlyWeatherButton(
+  hourlyWeather: any,
+  key: any,
+  isHourlyButton: boolean,
+) {
   const day = hourlyWeather.hourlyWeather?.is_day;
-  const code = hourlyWeather.hourlyWeather?.condition_code;
+  const code = hourlyWeather.isHourlyButton
+    ? hourlyWeather.hourlyWeather?.condition_code
+    : hourlyWeather.hourlyWeather.condition_code;
   return (
     <View style={styles.container}>
       <Text style={styles.hours}>
-        {hourlyWeather.hourlyWeather?.time?.slice(11, 13)} giờ
+        {!hourlyWeather.isHourlyButton ? 'ngày ' : null}
+        {hourlyWeather.isHourlyButton
+          ? hourlyWeather.hourlyWeather?.time?.slice(11, 13)
+          : hourlyWeather.hourlyWeather.date?.slice(8, 10)}
+        {hourlyWeather.isHourlyButton ? ' giờ' : null}
       </Text>
-      {day == 1 ? (
+      {day == 1 || hourlyWeather.isHourlyButton == false ? (
         code == 1000 ? (
           <Sun height={60} width={60} />
         ) : code == 1006 ||
@@ -79,7 +89,7 @@ function HourlyWeatherButton(hourlyWeather: any, key: any) {
           code == 1282 ? (
           <CloudAndRain height={60} width={60} />
         ) : null
-      ) : day == 0 ? (
+      ) : day == 0 || hourlyWeather.isHourlyButton == false ? (
         code == 1000 ? (
           <Moon height={60} width={60} />
         ) : code == 1006 ||
@@ -142,7 +152,12 @@ function HourlyWeatherButton(hourlyWeather: any, key: any) {
       {/*  height={60}*/}
       {/*/>*/}
       <Text style={{color: Colors.white}}>
-        {Math.round(hourlyWeather.hourlyWeather.temp_c)}°
+        {Math.round(
+          hourlyWeather.isHourlyButton
+            ? hourlyWeather.hourlyWeather.temp_c
+            : hourlyWeather.hourlyWeather.avgTemp_c,
+        )}
+        °
       </Text>
     </View>
   );
@@ -151,6 +166,7 @@ export default HourlyWeatherButton;
 
 const styles = StyleSheet.create({
   container: {
+    margin: 4,
     height: 146,
     width: 64,
     borderRadius: 30,
