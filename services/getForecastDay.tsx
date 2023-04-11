@@ -4,9 +4,13 @@ import GetCurrentLocation from './getLocationService';
 import LocationData from '../model/LocationData';
 import CurrentCondition from '../model/CurrentCondition';
 import ForecastDay from '../model/ForecastDay';
+import HourlyWeather from '../model/HourlyWeather';
+import hourlyWeather from '../model/HourlyWeather';
 
 function GetForecastDay() {
   const [forecastDay, setForecastDay] = React.useState<ForecastDay>();
+  const hourlyForecastArr: HourlyWeather[] = [];
+  const [hourlyForecast, setHourlyForecast] = React.useState<HourlyWeather[]>();
 
   const latLong = GetCurrentLocation();
   useEffect(() => {
@@ -20,6 +24,7 @@ function GetForecastDay() {
           key: 'a95ac2295269448094c170846231903',
           q: `${latLong?.latitude},${latLong?.longitude}`,
           lang: 'vi',
+          days: '7',
         },
       })
       .then(response => {
@@ -31,11 +36,21 @@ function GetForecastDay() {
             response.data.forecast.forecastday[0].day.mintemp_c,
           ),
         });
+        response.data.forecast.forecastday[0].hour.map(a => {
+          hourlyForecastArr.push({
+            time: a.time,
+            temp_c: a.temp_c,
+            condition_code: a.condition.code,
+            is_day: a.is_day,
+          });
+        });
+        setHourlyForecast(hourlyForecastArr);
       })
       .catch(error => {
         console.error('Network error:', error);
       });
   };
-  return forecastDay;
+
+  return [forecastDay, hourlyForecast];
 }
 export default GetForecastDay;

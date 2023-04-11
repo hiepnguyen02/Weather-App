@@ -499,7 +499,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = weather;
+				PRODUCT_BUNDLE_IDENTIFIER = weathera;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = hiepnguyen;
 				PRODUCT_NAME = Weather_App;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -527,7 +527,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = weather;
+				PRODUCT_BUNDLE_IDENTIFIER = weathera;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = hiepnguyen;
 				PRODUCT_NAME = Weather_App;
 				SWIFT_VERSION = 5.0;

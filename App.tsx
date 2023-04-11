@@ -109,7 +109,8 @@ function App(): JSX.Element {
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: 'rgba(198, 185, 229, 1)',
+            backgroundColor: 'transparent',
+            opacity: 0.7,
 
             height: 90,
             ...styles.bottomBar,
@@ -144,7 +145,7 @@ function App(): JSX.Element {
                   style={{
                     fontWeight: focused ? '600' : '300',
                   }}>
-                  Location
+                  Vị trí
                 </Text>
               </View>
             ),
@@ -179,7 +180,7 @@ function App(): JSX.Element {
                   style={{
                     fontWeight: focused ? '600' : '300',
                   }}>
-                  Home
+                  Thời tiết
                 </Text>
               </View>
             ),
@@ -214,7 +215,7 @@ function App(): JSX.Element {
                   style={{
                     fontWeight: focused ? '600' : '300',
                   }}>
-                  Setting
+                  Cài đặt
                 </Text>
               </View>
             ),

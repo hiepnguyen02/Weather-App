@@ -27,6 +27,9 @@ function GetCurrentWeather() {
           condition_text: response.data.current.condition.text,
           temp_c: Math.round(parseInt(response.data.current.temp_c)),
           name: response.data.location.name,
+          time: response.data.location.localtime,
+          condition_code: response.data.current.condition.code,
+          is_day: response.data.current.is_day,
         });
       })
       .catch(error => {

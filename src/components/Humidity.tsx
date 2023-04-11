@@ -6,9 +6,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 function Humidity() {
   return (
     <View style={styles.container}>
-      <Text style={styles.hours}>12 AM</Text>
-      <Moon width={60} height={60} />
-      <Text style={{color: Colors.white}}>19°</Text>
+      <Text>CẢM GIÁC NHƯ</Text>
     </View>
   );
 }
@@ -16,13 +14,17 @@ export default Humidity;
 
 const styles = StyleSheet.create({
   container: {
-    height: 146,
-    width: 64,
+    height: 124,
+    width: 124,
     borderRadius: 30,
-    backgroundColor: 'rgba(111, 88, 228, 1)',
+    backgroundColor: 'rgba(167, 167, 232, 0.5)',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    borderStyle: 'solid',
+    borderWidth: 2,
+    borderColor: 'rgba(111, 88, 228, 0.7)',
+    opacity: 1,
   },
   hours: {
     fontSize: 13,

@@ -4,25 +4,28 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
-  PanResponder,
-  Animated,
   ScrollView,
 } from 'react-native';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import HourlyWeatherButton from '../components/HourlyWeatherButton';
 import Humidity from '../components/Humidity';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import RBSheet from 'react-native-raw-bottom-sheet';
+
 import getCurrentWeather from '../../services/getCurrentWeather';
 
 import GetForecastDay from '../../services/getForecastDay';
-import BottomDrawer from 'react-native-bottom-drawer-view';
-import {HumidityIcon, Moon} from '../img';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import HourlyWeather from '../../model/HourlyWeather';
+import GetFutureWeather from '../../services/getFutureWeather';
+
 const TopTab = createMaterialTopTabNavigator();
 
-function Hourly() {
+function Hourly(hourlyWeather: HourlyWeather[]) {
+  const time = parseInt(hourlyWeather[1].slice(11, 13));
+  console.log(hourlyWeather[0]);
+  // hourlyWeather[0].map(a => {
+  //   a.time.slice(11, 13);
+  // });
+
   return (
     <View
       style={{
@@ -30,11 +33,17 @@ function Hourly() {
         justifyContent: 'space-between',
         margin: 10,
       }}>
-      <HourlyWeatherButton />
-      <HourlyWeatherButton />
-      <HourlyWeatherButton />
-      <HourlyWeatherButton />
-      <HourlyWeatherButton />
+      {hourlyWeather[0].map(a =>
+        a.time.slice(11, 13) > time && a.time.slice(11, 13) - time < 6 ? (
+          <HourlyWeatherButton
+            // time={a.time}
+            // temp_c={a.temp_c}
+            // condition_code={a.condition_code}
+            hourlyWeather={a}
+            key={parseInt(a.time.slice(11, 13))}
+          />
+        ) : null,
+      )}
     </View>
   );
 }
@@ -45,25 +54,69 @@ function Weekly() {
         flexDirection: 'row',
         justifyContent: 'space-between',
         margin: 10,
-      }}>
-      <HourlyWeatherButton />
-      <HourlyWeatherButton />
-      <HourlyWeatherButton />
-      <HourlyWeatherButton />
-      <HourlyWeatherButton />
-    </View>
+      }}
+    />
   );
 }
 
 function HomeScreen(this: any) {
   const currentCondition = getCurrentWeather();
-  const forecastDay = GetForecastDay();
+  const [forecastDay, hourlyForecast] = GetForecastDay();
+  const [backGround, setBackGround] = React.useState<number>();
+  const code = currentCondition?.condition_code;
+  const day = currentCondition?.is_day;
+  const clear_day = [1000, 1003];
+  const clear_night = [1000];
+  const rainy_day = [
+    1072, 1087, 1189, 1192, 1195, 1198, 1201, 1237, 1243, 1246, 1249, 1252,
+    1261, 1264, 1276, 1063, 1180, 1183, 1186, 1240, 1273, 1066, 1069, 1114,
+    1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258, 1279,
+    1282,
+  ];
+  const cloudy_day = [1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171];
+  const cloudy_night = [
+    1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171, 1003,
+  ];
+  const rainy_night = [
+    1072, 1087, 1189, 1192, 1195, 1198, 1201, 1237, 1243, 1246, 1249, 1252,
+    1261, 1264, 1276, 1063, 1180, 1183, 1186, 1240, 1273, 1066, 1069, 1114,
+    1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258, 1279,
+    1282,
+  ];
 
+  useEffect(() => {
+    if (code != null) {
+      if (day == 1) {
+        if (clear_day.includes(code)) {
+          setBackGround(require('../img/Background/clear_day.jpg'));
+        } else if (cloudy_day.includes(code)) {
+          setBackGround(require('../img/Background/cloudy_day.jpg'));
+        } else if (rainy_day.includes(code)) {
+          setBackGround(require('../img/Background/rainy_day.jpg'));
+        }
+      } else if (day == 0) {
+        if (clear_night.includes(code)) {
+          setBackGround(require('../img/Background/clear_night.jpg'));
+        } else if (cloudy_night.includes(code)) {
+          setBackGround(require('../img/Background/cloudy_night.jpg'));
+        } else if (rainy_night.includes(code)) {
+          setBackGround(require('../img/Background/rainy_night.jpg'));
+        }
+      }
+    } else {
+      setBackGround(require('../img/Background/home_background.png'));
+    }
+  }, [clear_day, cloudy_day, code, day, rainy_day]);
+  // console.log(typeof require('../img/Background/rainy_night.jpg'));
+  // console.log(hourlyForecast);
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
+  const futureWeather = GetFutureWeather();
   return (
-    <ImageBackground
-      source={require('../img/Background/home_day_background.png')}>
+    <ImageBackground source={backGround}>
       <SafeAreaView style={styles.container}>
-        <ScrollView>
+        <ScrollView style={{marginTop: 20}}>
           <View
             style={{
               justifyContent: 'center',
@@ -102,7 +155,11 @@ function HomeScreen(this: any) {
               sceneContainerStyle={{backgroundColor: 'transparent'}}>
               <TopTab.Screen
                 name={'Hourly'}
-                component={Hourly}
+                // component={() =>
+                //   currentCondition != undefined ? (
+                //     <Hourly time={currentCondition!.time} />
+                //   ) : null
+                // }
                 options={{
                   tabBarIcon: ({focused}) => (
                     <Text
@@ -119,8 +176,17 @@ function HomeScreen(this: any) {
                     width: '100%',
                     justifyContent: 'center',
                   },
-                }}
-              />
+                }}>
+                {props =>
+                  hourlyForecast != undefined ? (
+                    <Hourly
+                      // time={currentCondition?.time}
+                      {...[hourlyForecast, currentCondition?.time]}
+                      // time={currentCondition?.time}
+                    />
+                  ) : null
+                }
+              </TopTab.Screen>
               <TopTab.Screen
                 name={'Weekly'}
                 component={Weekly}
@@ -143,6 +209,16 @@ function HomeScreen(this: any) {
                 }}
               />
             </TopTab.Navigator>
+          </View>
+          <View style={{marginTop: 10, marginLeft: 12, marginBottom: 12}}>
+            <Text
+              style={{
+                fontWeight: '600',
+                fontSize: 16,
+                color: 'white',
+              }}>
+              Thông tin chi tiết
+            </Text>
           </View>
           <Humidity />
         </ScrollView>
