@@ -257,7 +257,12 @@ function HomeScreen(this: any) {
               Thông tin chi tiết
             </Text>
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              padding: 4,
+            }}>
             <Humidity />
             <Humidity />
             <Humidity />

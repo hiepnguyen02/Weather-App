@@ -501,7 +501,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = weathera;
+				PRODUCT_BUNDLE_IDENTIFIER = "weather-app";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = hiepnguyen;
 				PRODUCT_NAME = Weather_App;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -532,7 +532,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = weathera;
+				PRODUCT_BUNDLE_IDENTIFIER = "weather-app";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = hiepnguyen;
 				PRODUCT_NAME = Weather_App;
 				PROVISIONING_PROFILE_SPECIFIER = "";
