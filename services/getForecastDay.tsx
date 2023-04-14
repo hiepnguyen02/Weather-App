@@ -7,23 +7,25 @@ import ForecastDay from '../model/ForecastDay';
 import HourlyWeather from '../model/HourlyWeather';
 import hourlyWeather from '../model/HourlyWeather';
 
-function GetForecastDay() {
+function GetForecastDay(lat: number | undefined, lon: number | undefined) {
   const forecastDayArr: ForecastDay[] = [];
   const [forecastDay, setForecastDay] = React.useState<ForecastDay[]>();
   const hourlyForecastArr: HourlyWeather[] = [];
   const [hourlyForecast, setHourlyForecast] = React.useState<HourlyWeather[]>();
 
-  const latLong = GetCurrentLocation();
   useEffect(() => {
-    latLong != undefined ? fetchData(latLong) : null;
-  }, [latLong]);
+    lat != undefined && lon != undefined ? fetchData(lat, lon) : null;
+  }, [lat, lon]);
 
-  const fetchData = async (latLong: LocationData | undefined) => {
+  const fetchData = async (
+    lat: number | undefined,
+    lon: number | undefined,
+  ) => {
     await axios
       .get('https://api.weatherapi.com/v1/forecast.json', {
         params: {
           key: 'a95ac2295269448094c170846231903',
-          q: `${latLong?.latitude},${latLong?.longitude}`,
+          q: `${lat},${lon}`,
           lang: 'vi',
           days: '7',
         },

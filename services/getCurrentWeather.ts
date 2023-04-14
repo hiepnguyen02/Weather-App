@@ -4,21 +4,21 @@ import GetCurrentLocation from './getLocationService';
 import LocationData from '../model/LocationData';
 import CurrentCondition from '../model/CurrentCondition';
 
-function GetCurrentWeather() {
+function GetCurrentWeather(lat: number | undefined, lon: number | undefined) {
   const [currentCondition, setCurrentCondition] =
     React.useState<CurrentCondition>();
 
-  const latLong = GetCurrentLocation();
+  // const latLong = GetCurrentLocation();
   useEffect(() => {
-    latLong != undefined ? fetchData(latLong) : null;
-  }, [latLong]);
+    lat != undefined && lon != undefined ? fetchData(lat, lon) : null;
+  }, [lat, lon]);
 
-  const fetchData = async (latLong: LocationData | undefined) => {
+  const fetchData = async (lat: number, lon: number) => {
     await axios
       .get('https://api.weatherapi.com/v1/current.json', {
         params: {
           key: 'a95ac2295269448094c170846231903',
-          q: `${latLong?.latitude},${latLong?.longitude}`,
+          q: `${lat},${lon}`,
           lang: 'vi',
           aqi: 'yes',
         },

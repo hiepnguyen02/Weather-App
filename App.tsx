@@ -115,7 +115,8 @@ function App(): JSX.Element {
             height: 90,
             ...styles.bottomBar,
           },
-        }}>
+        }}
+        initialRouteName={'Home'}>
         <Tab.Screen
           name="Location Screen"
           component={LocationScreen}

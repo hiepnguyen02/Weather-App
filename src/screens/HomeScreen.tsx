@@ -17,6 +17,8 @@ import GetForecastDay from '../../services/getForecastDay';
 import HourlyWeather from '../../model/HourlyWeather';
 import GetFutureWeather from '../../services/getFutureWeather';
 import ForecastDay from '../../model/ForecastDay';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import GetCurrentLocation from '../../services/getLocationService';
 
 const TopTab = createMaterialTopTabNavigator();
 
@@ -78,8 +80,15 @@ function Weekly(dayForecast: ForecastDay[]) {
 }
 
 function HomeScreen(this: any) {
-  const currentCondition = getCurrentWeather();
-  const [forecastDay, hourlyForecast] = GetForecastDay();
+  const location = GetCurrentLocation();
+  const currentCondition = getCurrentWeather(
+    location?.latitude,
+    location?.longitude,
+  );
+  const [forecastDay, hourlyForecast] = GetForecastDay(
+    location?.latitude,
+    location?.longitude,
+  );
   const [backGround, setBackGround] = React.useState<number>();
   const code = currentCondition?.condition_code;
   const day = currentCondition?.is_day;
@@ -101,6 +110,13 @@ function HomeScreen(this: any) {
     1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258, 1279,
     1282,
   ];
+  const storeData = async () => {
+    try {
+      await AsyncStorage.setItem('background', backGround!.toString());
+    } catch (error) {
+      // Error saving data
+    }
+  };
 
   useEffect(() => {
     if (code != null) {
@@ -124,6 +140,7 @@ function HomeScreen(this: any) {
     } else {
       setBackGround(require('../img/Background/home_background.png'));
     }
+    storeData();
   }, [
     clear_day,
     clear_night,

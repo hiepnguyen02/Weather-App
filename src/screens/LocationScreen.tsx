@@ -1,54 +1,91 @@
 import {
+  ActivityIndicator,
+  FlatList,
   Image,
   ImageBackground,
+  Modal,
   SafeAreaView,
   StyleSheet,
   Text,
+  Touchable,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
-import HourlyWeatherButton from '../components/HourlyWeatherButton';
+
+import React, {useCallback, useEffect} from 'react';
+import SearchBar from 'react-native-platform-searchbar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import SearchForCities from '../../services/searchForCities';
+import City from '../../model/City';
 
 function LocationScreen() {
+  const [background, setBackground] = React.useState<string>();
+  const [searchText, setSearchText] = React.useState<string>('');
+  const [cities, loading] = SearchForCities(searchText);
+  const [isCitiesList, setIsCitiesList] = React.useState<boolean>(false);
+  const [isModal, setIsModal] = React.useState<boolean>(false);
+
+  const retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('background');
+      if (value !== null) {
+        setBackground(value);
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
+  useEffect(() => {
+    retrieveData();
+  }, []);
+
   return (
-    <ImageBackground
-      source={require('../img/Background/home_background.png')}
-      style={styles.container}>
-      <Text style={styles.locationText}>Cochabamba</Text>
-      <Text style={styles.temperatureText}>19°</Text>
-      <Text style={styles.skyText}>Mostly Clear</Text>
-      <Text style={styles.lowHighTemp}>L:19° H:29°</Text>
-      {/* <HourlyWeatherButton /> */}
+    <ImageBackground source={parseInt(background!)}>
+      <SafeAreaView style={styles.container}>
+        <SearchBar
+          value={searchText}
+          onChangeText={(text: string) => setSearchText(text)}
+          style={{width: '90%', paddingTop: 20}}
+          onFocus={() => setIsCitiesList(true)}
+          onCancel={() => setIsCitiesList(false)}
+          placeholder="Bấm vào đây để tìm thành phố"
+          inputStyle={{alignItems: 'center'}}>
+          {loading ? (
+            <ActivityIndicator style={{marginRight: 10}} />
+          ) : undefined}
+        </SearchBar>
+        <View style={{backgroundColor: 'transparent', marginTop: 20}}>
+          {isCitiesList ? (
+            <FlatList
+              data={cities}
+              renderItem={({item}) => (
+                <TouchableOpacity>
+                  <Text
+                    style={{
+                      padding: 10,
+                      fontSize: 18,
+                      height: 44,
+                      color: Colors.white,
+                    }}>
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          ) : null}
+        </View>
+      </SafeAreaView>
     </ImageBackground>
   );
 }
 export default LocationScreen;
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     width: '100%',
     height: '100%',
-  },
-  locationText: {
-    color: '#FFFF',
-    fontWeight: '400',
-    fontSize: 24,
-  },
-  temperatureText: {
-    color: '#FFFF',
-    fontWeight: '300',
-    fontSize: 60,
-  },
-  skyText: {
-    marginBottom: 10,
-    fontWeight: '500',
-    fontSize: 15,
-    color: 'rgba(255, 255, 255, 0.6)',
-  },
-  lowHighTemp: {
-    color: '#FFFF',
-    fontWeight: '400',
-    fontSize: 15,
   },
 });
