@@ -18,6 +18,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import SearchForCities from '../../services/searchForCities';
 import City from '../../model/City';
+import {useNavigation} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 
 function LocationScreen() {
   const [background, setBackground] = React.useState<string>();
@@ -25,7 +27,7 @@ function LocationScreen() {
   const [cities, loading] = SearchForCities(searchText);
   const [isCitiesList, setIsCitiesList] = React.useState<boolean>(false);
   const [isModal, setIsModal] = React.useState<boolean>(false);
-
+  const navigation = useNavigation();
   const retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem('background');
@@ -60,7 +62,12 @@ function LocationScreen() {
             <FlatList
               data={cities}
               renderItem={({item}) => (
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('Details', {
+                      item,
+                    });
+                  }}>
                   <Text
                     style={{
                       padding: 10,
