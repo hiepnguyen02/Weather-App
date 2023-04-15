@@ -31,12 +31,26 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SettingsScreen from './src/screens/SettingsScreen';
 import LocationScreen from './src/screens/LocationScreen';
+import {createStackNavigator} from '@react-navigation/stack';
+import DetailScreen from './src/screens/DetailScreen';
 
 // type SectionProps = PropsWithChildren<{
 //   title: string;
 // }>;
 
 const Tab = createBottomTabNavigator();
+const HomeStack = createStackNavigator();
+
+function DetailStackScreen() {
+  return (
+    <HomeStack.Navigator
+      screenOptions={{headerShown: false}}
+      initialRouteName={'List'}>
+      <HomeStack.Screen name="List" component={LocationScreen} />
+      <HomeStack.Screen name="Details" component={DetailScreen} />
+    </HomeStack.Navigator>
+  );
+}
 
 // function Section({children, title}: SectionProps): JSX.Element {
 //   const isDarkMode = useColorScheme() === 'dark';
@@ -119,7 +133,7 @@ function App(): JSX.Element {
         initialRouteName={'Home'}>
         <Tab.Screen
           name="Location Screen"
-          component={LocationScreen}
+          component={DetailStackScreen}
           options={{
             tabBarShowLabel: false,
             tabBarIcon: ({focused}) => (
