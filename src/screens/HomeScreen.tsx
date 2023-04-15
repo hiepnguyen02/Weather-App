@@ -6,7 +6,6 @@
       View,
       ScrollView,
     } from 'react-native';
-    //import FastImage from 'react-native-fast-image';
     import Video from 'react-native-video';
     import React, {useEffect, useRef} from 'react';
     import HourlyWeatherButton from '../components/HourlyWeatherButton';
@@ -98,8 +97,8 @@
       };*/
       const code = currentCondition?.condition_code;
       const day = currentCondition?.is_day;
-      const clear_day = [1000, 1003];
-      const clear_night = [1000, 1003];
+      const clear_day = [1000];
+      const clear_night = [1000];
       const currentTime = (currentCondition && currentCondition.time) ? currentCondition.time.slice(11,16) : null;
       const rainy_day = [
         1072, 1087, 1189, 1192, 1195, 1198, 1201, 1237, 1243, 1246, 1249, 1252,
@@ -107,9 +106,9 @@
         1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258, 1279,
         1282,
       ];
-      const cloudy_day = [1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171];
+      const cloudy_day = [1003, 1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171];
       const cloudy_night = [
-        1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171, 1003,
+        1003, 1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171, 1003,
       ];
       const rainy_night = [
         1072, 1087, 1189, 1192, 1195, 1198, 1201, 1237, 1243, 1246, 1249, 1252,
@@ -168,7 +167,7 @@
       return (
 
           <SafeAreaView style={styles.container}>
-            <ScrollView style={{marginTop: 20, zIndex: 1}}>
+            <ScrollView style={{zIndex: 1}}>
               <View
                 style={{
                   justifyContent: 'center',
