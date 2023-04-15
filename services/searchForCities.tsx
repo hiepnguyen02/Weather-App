@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+    import React, {useEffect} from 'react';
 import axios from 'axios';
 import GetCurrentLocation from './getLocationService';
 import LocationData from '../model/LocationData';

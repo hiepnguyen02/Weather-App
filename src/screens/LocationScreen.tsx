@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
+import Video from 'react-native-video';
 import React, {useCallback, useEffect} from 'react';
 import SearchBar from 'react-native-platform-searchbar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -41,8 +41,17 @@ function LocationScreen() {
   }, []);
 
   return (
-    <ImageBackground source={parseInt(background!)}>
+
       <SafeAreaView style={styles.container}>
+      <Video
+          source={require("../img/Background/snowy_day.mp4")}
+          style={styles.backgroundVideo}
+          muted={true}
+          repeat={true}
+          resizeMode={"cover"}
+          rate={0.5}
+          ignoreSilentSwitch={"obey"}
+        />
         <SearchBar
           value={searchText}
           onChangeText={(text: string) => setSearchText(text)}
@@ -76,7 +85,6 @@ function LocationScreen() {
           ) : null}
         </View>
       </SafeAreaView>
-    </ImageBackground>
   );
 }
 export default LocationScreen;
@@ -88,4 +96,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  backgroundVideo: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        alignItems: "stretch",
+        bottom: 0,
+        right: 0
+      },
 });
