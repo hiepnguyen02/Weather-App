@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import Video from 'react-native-video';
 import React, {useEffect, useRef} from 'react';
 import HourlyWeatherButton from '../components/HourlyWeatherButton';
 import Humidity from '../components/Humidity';
@@ -94,17 +95,18 @@ function DetailScreen({navigation, route}) {
   const [backGround, setBackGround] = React.useState<number>();
   const code = currentCondition?.condition_code;
   const day = currentCondition?.is_day;
-  const clear_day = [1000, 1003];
+  const clear_day = [1000];
   const clear_night = [1000];
+  const currentTime = (currentCondition && currentCondition.time) ? currentCondition.time.slice(11,16) : null;
   const rainy_day = [
     1072, 1087, 1189, 1192, 1195, 1198, 1201, 1237, 1243, 1246, 1249, 1252,
     1261, 1264, 1276, 1063, 1180, 1183, 1186, 1240, 1273, 1066, 1069, 1114,
     1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258, 1279,
     1282,
   ];
-  const cloudy_day = [1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171];
+  const cloudy_day = [1003, 1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171];
   const cloudy_night = [
-    1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171, 1003,
+    1003, 1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171, 1003,
   ];
   const rainy_night = [
     1072, 1087, 1189, 1192, 1195, 1198, 1201, 1237, 1243, 1246, 1249, 1252,
@@ -120,29 +122,30 @@ function DetailScreen({navigation, route}) {
     }
   };
 
-  useEffect(() => {
-    if (code != null) {
-      if (day == 1) {
-        if (clear_day.includes(code)) {
-          setBackGround(require('../img/Background/clear_day.jpg'));
-        } else if (cloudy_day.includes(code)) {
-          setBackGround(require('../img/Background/cloudy_day.jpg'));
-        } else if (rainy_day.includes(code)) {
-          setBackGround(require('../img/Background/rainy_day.jpg'));
+      useEffect(() => {
+        if (code != null) {
+          if (day == 1) {
+            if (clear_day.includes(code)) {
+              setBackGround(require('../img/Background/clear_day.mp4'));
+            } else if (cloudy_day.includes(code)) {
+              setBackGround(require('../img/Background/cloudy_day.mp4'));
+            } else if (rainy_day.includes(code)) {
+              setBackGround(require('../img/Background/rainy_day.mp4'));
+            }
+          } else if (day == 0) {
+            if (clear_night.includes(code)) {
+              setBackGround(require('../img/Background/clear_night.mp4'));
+            } else if (cloudy_night.includes(code)) {
+              setBackGround(require('../img/Background/cloudy_night.mp4'));
+            } else if (rainy_night.includes(code)) {
+              setBackGround(require('../img/Background/rainy_night.mp4'));
+            }
+          }
+        } else {
+          setBackGround(require('../img/Background/snowy_day.mp4'));
+          setBackGround(require('../img/Background/snowy_day.mp4'));
         }
-      } else if (day == 0) {
-        if (clear_night.includes(code)) {
-          setBackGround(require('../img/Background/clear_night.jpg'));
-        } else if (cloudy_night.includes(code)) {
-          setBackGround(require('../img/Background/cloudy_night.jpg'));
-        } else if (rainy_night.includes(code)) {
-          setBackGround(require('../img/Background/rainy_night.jpg'));
-        }
-      }
-    } else {
-      setBackGround(require('../img/Background/home_background.png'));
-    }
-    storeData();
+        storeData();
   }, [
     clear_day,
     clear_night,
@@ -160,9 +163,9 @@ function DetailScreen({navigation, route}) {
   // @ts-ignore
 
   return (
-    <ImageBackground source={backGround!}>
+    //<ImageBackground source={backGround!}>
       <SafeAreaView style={styles.container}>
-        <ScrollView>
+        <ScrollView style={{zIndex: 1}}>
           <View
             style={{
               flexDirection: 'row',
@@ -202,6 +205,7 @@ function DetailScreen({navigation, route}) {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
+            <Text style={styles.time}>{currentTime}</Text>
             <Text style={styles.locationText}>{currentCondition?.name}</Text>
             <Text style={styles.temperatureText}>
               {currentCondition?.temp_c}°
@@ -321,9 +325,18 @@ function DetailScreen({navigation, route}) {
             <Humidity />
           </View>
         </ScrollView>
+        <Video
+            source={backGround!}
+            style={styles.backgroundVideo}
+            muted={true}
+            repeat={true}
+            resizeMode={"cover"}
+            rate={0.5}
+            ignoreSilentSwitch={"obey"}
+          />
       </SafeAreaView>
-      {/* <HourlyWeatherButton /> */}
-    </ImageBackground>
+      /*{ <HourlyWeatherButton /> }*/
+
   );
 }
 export default DetailScreen;
@@ -332,6 +345,7 @@ const styles = StyleSheet.create({
     height: '100%',
     flexDirection: 'column',
     justifyContent: 'space-between',
+    position: 'relative',
   },
   locationText: {
     color: '#FFFF',
@@ -354,4 +368,21 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 15,
   },
+  time: {
+          color: '#FFFF',
+              fontWeight: '400',
+              fontSize: 18,
+        },
+  backgroundVideo: {
+              position: "absolute",
+              top: 0,
+              left: 0,
+              alignItems: "stretch",
+              bottom: 0,
+              right: 0,
+              justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                  height: '100%',
+            },
 });
