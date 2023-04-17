@@ -1,11 +1,8 @@
 import React, {useEffect} from 'react';
 import axios from 'axios';
-import GetCurrentLocation from './getLocationService';
-import LocationData from '../model/LocationData';
-import CurrentCondition from '../model/CurrentCondition';
+
 import ForecastDay from '../model/ForecastDay';
 import HourlyWeather from '../model/HourlyWeather';
-import hourlyWeather from '../model/HourlyWeather';
 
 function GetForecastDay(lat: number | undefined, lon: number | undefined) {
   const forecastDayArr: ForecastDay[] = [];
@@ -31,17 +28,11 @@ function GetForecastDay(lat: number | undefined, lon: number | undefined) {
         },
       })
       .then(response => {
-        // setForecastDay({
-        //   weeklyForecast: {avgTemp_c: 0, date: ''},
-        //   maxTemp_c: Math.round(
-        //     parseInt(response.data.forecast.forecastday[0].day.maxtemp_c),
-        //   ),
-        //   minTemp_c: parseInt(
-        //     response.data.forecast.forecastday[0].day.mintemp_c,
-        //   ),
-        // });
         response.data.forecast.forecastday.map(a => {
           forecastDayArr.push({
+            condition_text: '',
+            name: '',
+            region: '',
             condition_code: a.day.condition.code,
             maxTemp_c: a.day.maxtemp_c,
             minTemp_c: a.day.mintemp_c,

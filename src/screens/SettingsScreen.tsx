@@ -21,20 +21,20 @@ function SettingsScreen() {
       /*{ <HourlyWeatherButton /> }*/
     //</ImageBackground>
     <View style={styles.container}>
-          <Video
-            source={require("../img/Background/snowy_day.mp4")}
-            style={styles.backgroundVideo}
-            muted={true}
-            repeat={true}
-            resizeMode={"cover"}
-            rate={0.5}
-            ignoreSilentSwitch={"obey"}
-          />
-          <Text style={styles.locationText}>Cochabamba</Text>
-          <Text style={styles.temperatureText}>19°</Text>
-          <Text style={styles.skyText}>Mostly Clear</Text>
-          <Text style={styles.lowHighTemp}>L:19° H:29°</Text>
-        </View>
+      <Video
+        source={require('../img/Background/snowy_day.mp4')}
+        style={styles.backgroundVideo}
+        muted={true}
+        repeat={true}
+        resizeMode={'cover'}
+        rate={0.5}
+        ignoreSilentSwitch={'obey'}
+      />
+      <Text style={styles.locationText}>Cochabamba</Text>
+      <Text style={styles.temperatureText}>19°</Text>
+      <Text style={styles.skyText}>Mostly Clear</Text>
+      <Text style={styles.lowHighTemp}>L:19° H:29°</Text>
+    </View>
   );
 }
 export default SettingsScreen;
@@ -67,11 +67,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   backgroundVideo: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      alignItems: "stretch",
-      bottom: 0,
-      right: 0
-    },
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    alignItems: 'stretch',
+    bottom: 0,
+    right: 0,
+  },
 });

@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import Video from 'react-native-video';
 import React, {useEffect, useRef} from 'react';
@@ -23,6 +24,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import GetCurrentLocation from '../../services/getLocationService';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {Back, PinLocation} from '../img/DetailScreenIcon';
+import City from '../../model/City';
+import {get} from 'axios';
+import city from '../../model/City';
 
 const TopTab = createMaterialTopTabNavigator();
 
@@ -97,14 +101,19 @@ function DetailScreen({navigation, route}) {
   const day = currentCondition?.is_day;
   const clear_day = [1000];
   const clear_night = [1000];
-  const currentTime = (currentCondition && currentCondition.time) ? currentCondition.time.slice(11,16) : null;
+  const currentTime =
+    currentCondition && currentCondition.time
+      ? currentCondition.time.slice(11, 16)
+      : null;
   const rainy_day = [
     1072, 1087, 1189, 1192, 1195, 1198, 1201, 1237, 1243, 1246, 1249, 1252,
     1261, 1264, 1276, 1063, 1180, 1183, 1186, 1240, 1273, 1066, 1069, 1114,
     1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258, 1279,
     1282,
   ];
-  const cloudy_day = [1003, 1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171];
+  const cloudy_day = [
+    1003, 1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171,
+  ];
   const cloudy_night = [
     1003, 1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171, 1003,
   ];
@@ -114,6 +123,8 @@ function DetailScreen({navigation, route}) {
     1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258, 1279,
     1282,
   ];
+  const [citiesList, setCitiesList] = React.useState<City[]>();
+
   const storeData = async () => {
     try {
       await AsyncStorage.setItem('background', backGround!.toString());
@@ -121,31 +132,47 @@ function DetailScreen({navigation, route}) {
       // Error saving data
     }
   };
+  const storeLocation = async (city: City) => {
+    let cities = await AsyncStorage.getItem('location');
+    let arr = JSON.parse(cities!) == null ? [] : JSON.parse(cities!);
 
-      useEffect(() => {
-        if (code != null) {
-          if (day == 1) {
-            if (clear_day.includes(code)) {
-              setBackGround(require('../img/Background/clear_day.mp4'));
-            } else if (cloudy_day.includes(code)) {
-              setBackGround(require('../img/Background/cloudy_day.mp4'));
-            } else if (rainy_day.includes(code)) {
-              setBackGround(require('../img/Background/rainy_day.mp4'));
-            }
-          } else if (day == 0) {
-            if (clear_night.includes(code)) {
-              setBackGround(require('../img/Background/clear_night.mp4'));
-            } else if (cloudy_night.includes(code)) {
-              setBackGround(require('../img/Background/cloudy_night.mp4'));
-            } else if (rainy_night.includes(code)) {
-              setBackGround(require('../img/Background/rainy_night.mp4'));
-            }
-          }
-        } else {
-          setBackGround(require('../img/Background/snowy_day.mp4'));
-          setBackGround(require('../img/Background/snowy_day.mp4'));
+    if (arr.find(o => o.name == city.name) != undefined) {
+      Alert.alert('Thành phố đã tồn tại trong danh sách lưu trữ');
+    } else {
+      arr.push(city);
+      Alert.alert(`Bạn đã thêm ${city.name} vào danh sách thành phố`);
+    }
+
+    try {
+      await AsyncStorage.setItem('location', JSON.stringify(arr));
+    } catch (error) {
+      // Error saving data
+    }
+  };
+
+  useEffect(() => {
+    if (code != null) {
+      if (day == 1) {
+        if (clear_day.includes(code)) {
+          setBackGround(require('../img/Background/clear_day.mp4'));
+        } else if (cloudy_day.includes(code)) {
+          setBackGround(require('../img/Background/cloudy_day.mp4'));
+        } else if (rainy_day.includes(code)) {
+          setBackGround(require('../img/Background/rainy_day.mp4'));
         }
-        storeData();
+      } else if (day == 0) {
+        if (clear_night.includes(code)) {
+          setBackGround(require('../img/Background/clear_night.mp4'));
+        } else if (cloudy_night.includes(code)) {
+          setBackGround(require('../img/Background/cloudy_night.mp4'));
+        } else if (rainy_night.includes(code)) {
+          setBackGround(require('../img/Background/rainy_night.mp4'));
+        }
+      }
+    } else {
+      setBackGround(require('../img/Background/snowy_day.mp4'));
+      setBackGround(require('../img/Background/snowy_day.mp4'));
+    }
   }, [
     clear_day,
     clear_night,
@@ -161,11 +188,17 @@ function DetailScreen({navigation, route}) {
   // @ts-ignore
   // @ts-ignore
   // @ts-ignore
-
+  console.log('Detail render ne');
   return (
-    //<ImageBackground source={backGround!}>
+    <Video
+      source={backGround!}
+      style={styles.backgroundVideo}
+      muted={true}
+      repeat={true}
+      resizeMode={'cover'}
+      rate={0.5}>
       <SafeAreaView style={styles.container}>
-        <ScrollView style={{zIndex: 1}}>
+        <ScrollView>
           <View
             style={{
               flexDirection: 'row',
@@ -178,15 +211,8 @@ function DetailScreen({navigation, route}) {
                 backgroundColor: 'transparent',
                 alignItems: 'center',
               }}
-              onPress={async () => {
-                try {
-                  await AsyncStorage.setItem(
-                    'background',
-                    route.params.item.toString(),
-                  );
-                } catch (error) {
-                  // Error saving data
-                }
+              onPress={() => {
+                storeLocation(route.params?.item);
               }}>
               <PinLocation width={20} height={20} />
               <Text style={{color: 'white'}}>Lưu vị trí</Text>
@@ -220,9 +246,7 @@ function DetailScreen({navigation, route}) {
               {Math.round(forecastDay ? forecastDay[0].maxTemp_c : null)}°
             </Text>
             <View style={{marginTop: 7}}>
-              <View style={{flexDirection: 'row', alignContent: 'center'}}>
-                {/*<Humidity width={25} height={25} />*/}
-              </View>
+              <View style={{flexDirection: 'row', alignContent: 'center'}} />
             </View>
           </View>
 
@@ -241,11 +265,6 @@ function DetailScreen({navigation, route}) {
               sceneContainerStyle={{backgroundColor: 'transparent'}}>
               <TopTab.Screen
                 name={'Hourly'}
-                // component={() =>
-                //   currentCondition != undefined ? (
-                //     <Hourly time={currentCondition!.time} />
-                //   ) : null
-                // }
                 options={{
                   tabBarIcon: ({focused}) => (
                     <Text
@@ -294,11 +313,7 @@ function DetailScreen({navigation, route}) {
                 }}>
                 {props =>
                   forecastDay != undefined ? (
-                    <Weekly
-                      // time={currentCondition?.time}
-                      {...[forecastDay]}
-                      // time={currentCondition?.time}
-                    />
+                    <Weekly {...[forecastDay]} />
                   ) : null
                 }
               </TopTab.Screen>
@@ -325,23 +340,14 @@ function DetailScreen({navigation, route}) {
             <Humidity />
           </View>
         </ScrollView>
-        <Video
-            source={backGround!}
-            style={styles.backgroundVideo}
-            muted={true}
-            repeat={true}
-            resizeMode={"cover"}
-            rate={0.5}
-            ignoreSilentSwitch={"obey"}
-          />
       </SafeAreaView>
-      /*{ <HourlyWeatherButton /> }*/
-
+    </Video>
   );
 }
 export default DetailScreen;
 const styles = StyleSheet.create({
   container: {
+    zIndex: 1,
     height: '100%',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -369,20 +375,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   time: {
-          color: '#FFFF',
-              fontWeight: '400',
-              fontSize: 18,
-        },
+    color: '#FFFF',
+    fontWeight: '400',
+    fontSize: 18,
+  },
   backgroundVideo: {
-              position: "absolute",
-              top: 0,
-              left: 0,
-              alignItems: "stretch",
-              bottom: 0,
-              right: 0,
-              justifyContent: 'center',
-                  alignItems: 'center',
-                  width: '100%',
-                  height: '100%',
-            },
+    position: 'absolute',
+    zIndex: 0,
+    width: '100%',
+    height: '100%',
+  },
 });

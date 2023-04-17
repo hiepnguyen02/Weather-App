@@ -1,8 +1,6 @@
-    import React, {useEffect} from 'react';
+import React, {useEffect} from 'react';
 import axios from 'axios';
-import GetCurrentLocation from './getLocationService';
-import LocationData from '../model/LocationData';
-import CurrentCondition from '../model/CurrentCondition';
+
 import City from '../model/City';
 
 function SearchForCities(text: string) {
@@ -11,6 +9,7 @@ function SearchForCities(text: string) {
   const [citiesList, setCitiesList] = React.useState<City[]>();
 
   useEffect(() => {
+    console.log('jshhs');
     text != undefined && text != null && text != '' ? fetchData(text) : null;
   }, [text]);
 

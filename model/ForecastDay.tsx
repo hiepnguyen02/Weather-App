@@ -6,5 +6,8 @@ interface ForecastDay {
   avgTemp_c: number;
 
   condition_code: number;
+  name: string;
+  region: string;
+  condition_text: string;
 }
 export default ForecastDay;
