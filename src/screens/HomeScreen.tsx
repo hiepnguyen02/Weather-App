@@ -173,13 +173,16 @@ function HomeScreen(this: any) {
   // @ts-ignore
 
   return (
-    <Video
-      source={backGround}
-      style={styles.backgroundVideo}
-      muted={true}
-      repeat={true}
-      resizeMode={'cover'}
-      rate={0.5}>
+    <View style={{height: '100%', width: '100%'}}>
+      <Video
+        source={backGround}
+        style={styles.backgroundVideo}
+        muted={true}
+        repeat={true}
+        resizeMode={'cover'}
+        rate={0.5}
+        ignoreSilentSwitch={'obey'}
+      />
       <SafeAreaView style={styles.container}>
         <ScrollView style={{paddingTop: 20}}>
           <View
@@ -307,7 +310,7 @@ function HomeScreen(this: any) {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </Video>
+    </View>
     /*{ <HourlyWeatherButton /> }*/
   );
 }
@@ -348,8 +351,13 @@ const styles = StyleSheet.create({
   },
   backgroundVideo: {
     position: 'absolute',
-    zIndex: 0,
+    zIndex: -1,
     width: '100%',
     height: '100%',
+    top: 0,
+    left: 0,
+    alignItems: 'stretch',
+    bottom: 0,
+    right: 0,
   },
 });

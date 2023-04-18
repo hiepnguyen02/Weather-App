@@ -9,5 +9,6 @@ interface ForecastDay {
   name: string;
   region: string;
   condition_text: string;
+  icon_link: string;
 }
 export default ForecastDay;

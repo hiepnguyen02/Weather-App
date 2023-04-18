@@ -74,13 +74,16 @@ function LocationScreen() {
   }, []);
   console.log('jsjsj');
   return (
-    <Video
-      source={parseInt(background!)}
-      style={styles.backgroundVideo}
-      muted={true}
-      repeat={true}
-      resizeMode={'cover'}
-      rate={0.5}>
+    <View style={{height: '100%', width: '100%'}}>
+      <Video
+        source={background}
+        style={styles.backgroundVideo}
+        muted={true}
+        repeat={true}
+        resizeMode={'cover'}
+        rate={0.5}
+        ignoreSilentSwitch={'obey'}
+      />
       <SafeAreaView style={styles.container}>
         <SearchBar
           value={searchText}
@@ -142,7 +145,7 @@ function LocationScreen() {
           )}
         </View>
       </SafeAreaView>
-    </Video>
+    </View>
   );
 }
 export default LocationScreen;

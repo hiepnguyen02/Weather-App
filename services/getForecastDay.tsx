@@ -30,6 +30,7 @@ function GetForecastDay(lat: number | undefined, lon: number | undefined) {
       .then(response => {
         response.data.forecast.forecastday.map(a => {
           forecastDayArr.push({
+            icon_link: a.day.condition.icon,
             condition_text: '',
             name: '',
             region: '',
@@ -44,6 +45,7 @@ function GetForecastDay(lat: number | undefined, lon: number | undefined) {
 
         response.data.forecast.forecastday[0].hour.map(a => {
           hourlyForecastArr.push({
+            icon_link: a.condition.icon,
             time: a.time,
             temp_c: a.temp_c,
             condition_code: a.condition.code,

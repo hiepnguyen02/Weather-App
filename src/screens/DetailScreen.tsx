@@ -190,13 +190,16 @@ function DetailScreen({navigation, route}) {
   // @ts-ignore
   console.log('Detail render ne');
   return (
-    <Video
-      source={backGround!}
-      style={styles.backgroundVideo}
-      muted={true}
-      repeat={true}
-      resizeMode={'cover'}
-      rate={0.5}>
+    <View style={{height: '100%', width: '100%'}}>
+      <Video
+        source={backGround}
+        style={styles.backgroundVideo}
+        muted={true}
+        repeat={true}
+        resizeMode={'cover'}
+        rate={0.5}
+        ignoreSilentSwitch={'obey'}
+      />
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <View
@@ -341,7 +344,7 @@ function DetailScreen({navigation, route}) {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </Video>
+    </View>
   );
 }
 export default DetailScreen;
