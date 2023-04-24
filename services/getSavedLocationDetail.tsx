@@ -1,19 +1,20 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import GetCurrentLocation from './getLocationService';
 import LocationData from '../model/LocationData';
 import CurrentCondition from '../model/CurrentCondition';
-import City from '../model/City';
 import ForecastDay from '../model/ForecastDay';
 
-function GetSavedLocation(lat: number, lon: number) {
-  const [savedLocationDetails, setSavedLocationDeatail] =
-    React.useState<ForecastDay>();
-
-  useEffect(() => {
-    console.log('jshsh');
-    lat != undefined && lon != undefined ? fetchData(lat, lon) : null;
-  }, [lat, lon]);
+function GetSavedLocationDetail(
+  lat: number | undefined,
+  lon: number | undefined,
+) {
+  const [detail, setDetails] = useState<ForecastDay>();
+  // const latLong = GetCurrentLocation();
+  // useEffect(() => {
+  //   lat != undefined && lon != undefined ? fetchData(lat, lon) : null;
+  // }, [lat, lon]);
+  // let result: ForecastDay[] = [];
 
   const fetchData = async (lat: number, lon: number) => {
     await axios
@@ -21,17 +22,33 @@ function GetSavedLocation(lat: number, lon: number) {
         params: {
           key: 'a95ac2295269448094c170846231903',
           q: `${lat},${lon}`,
+          lang: 'vi',
         },
       })
       .then(response => {
-        response.data != undefined
-          ? setSavedLocationDeatail(response.data)
-          : null;
+        setDetails({
+          maxTemp_c: response.data.forecast.forecastday[0].day.maxtemp_c,
+          minTemp_c: response.data.forecast.forecastday[0].day.mintemp_c,
+
+          date: '',
+          avgTemp_c: response.data.current.temp_c,
+
+          condition_code: 0,
+          name: response.data.location.name,
+          region: response.data.location.country,
+          condition_text: response.data.current.condition.text,
+          icon_link: response.data.current.condition.icon,
+        });
       })
+
       .catch(error => {
         console.error('Network error:', error);
       });
   };
-  return savedLocationDetails;
+  useEffect(() => {
+    lat != undefined && lon != undefined ? fetchData(lat, lon) : null;
+  }, [lat, lon]);
+
+  return detail;
 }
-export default GetSavedLocation;
+export default GetSavedLocationDetail;

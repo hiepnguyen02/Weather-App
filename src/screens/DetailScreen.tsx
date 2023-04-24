@@ -140,6 +140,7 @@ function DetailScreen({navigation, route}) {
       Alert.alert('Thành phố đã tồn tại trong danh sách lưu trữ');
     } else {
       arr.push(city);
+
       Alert.alert(`Bạn đã thêm ${city.name} vào danh sách thành phố`);
     }
 
