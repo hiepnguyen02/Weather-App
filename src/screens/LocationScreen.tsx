@@ -227,14 +227,16 @@ function LocationScreen() {
           <TextInput
             value={searchText}
             style={{width: '76%'}}
-            onChangeText={(text: string) => setSearchText(text)}
-            onFocus={() => {
+            onChangeText={(text: string) => {
+              setSearchText(text);
               setIsCitiesList(true);
             }}
+            onFocus={() => setIsCitiesList(true)}
           />
           <TouchableOpacity
             onPress={() => {
               setIsCitiesList(false);
+              setSearchText('');
             }}>
             <Image
               source={require('../img/detailComponent/close.png')}
@@ -272,7 +274,16 @@ function LocationScreen() {
             // />
             <SwipeListView
               data={savedLocation}
-              renderItem={object => <RenderItem item={object} />}
+              renderItem={object => (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('Details', {
+                      object,
+                    });
+                  }}>
+                  <RenderItem item={object} />
+                </TouchableOpacity>
+              )}
               renderHiddenItem={(data, rowMap) => (
                 <View
                   style={{
