@@ -31,6 +31,14 @@ function GetCurrentWeather(lat: number | undefined, lon: number | undefined) {
           time: response.data.location.localtime,
           condition_code: response.data.current.condition.code,
           is_day: response.data.current.is_day,
+          aqi: response.data.current.uv, //.air_quality.us-epa-index,
+          uv_index: response.data.current.uv,
+          wind_kph: response.data.current.wind_kph,
+          wind_degree: response.data.current.wind_degree,
+          rainfall: response.data.current.precip_mm,
+          feelslike_c: response.data.current.feelslike_c,
+          humidity: response.data.current.humidity,
+          visibility: response.data.current.vis_km,
         });
       })
       .catch(error => {

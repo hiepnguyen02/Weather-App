@@ -12,6 +12,7 @@ import Video from 'react-native-video';
 import React, {useEffect, useRef} from 'react';
 import HourlyWeatherButton from '../components/HourlyWeatherButton';
 import Humidity from '../components/Humidity';
+import WeatherDetails from '../components/WeatherDetails';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import getCurrentWeather from '../../services/getCurrentWeather';
@@ -333,15 +334,8 @@ function DetailScreen({navigation, route}) {
               Thông tin chi tiết
             </Text>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              padding: 4,
-            }}>
-            <Humidity />
-            <Humidity />
-            <Humidity />
+          <View>
+            <WeatherDetails currentCondition={currentCondition}/>
           </View>
         </ScrollView>
       </SafeAreaView>
