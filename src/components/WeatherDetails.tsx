@@ -1,8 +1,9 @@
-import {Text, View, StyleSheet, Dimensions } from 'react-native';
+import {Text, View, StyleSheet, Image, Dimensions } from 'react-native';
 import React from 'react';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {Temperature} from '../img/HomeIcon';
+import {rainfallIcon, uvIndexIcon, visibilityIcon, windIcon} from '../img/HomeIcon';
 const { width } = Dimensions.get('window');
+console.log(width);
 function WeatherDetails({ currentCondition }) {
   const aqi = (currentCondition?.aqi??null);
   let aqiMessage;
@@ -70,8 +71,8 @@ function WeatherDetails({ currentCondition }) {
   if (feelslike_c !== undefined) {
     if (feelslike_c < currentCondition?.temp_c) {
       feelsLikeMessage = "Cảm giác lạnh hơn do bị ảnh hưởng bởi độ ẩm và gió.";
-    } else if (feelslike_c < currentCondition?.temp_c) {
-      feelsLikeMessage = "Cảm giác ấm hơn do bị ảnh hưởng bởi độ ẩm và gió.";
+    } else if (feelslike_c > currentCondition?.temp_c) {
+      feelsLikeMessage = "Cảm giác nóng hơn do bị ảnh hưởng bởi độ ẩm và gió.";
     } else {
       feelsLikeMessage = "Cảm giác đúng so với nhiệt độ thực tế.";
     }
@@ -111,11 +112,11 @@ function WeatherDetails({ currentCondition }) {
   return (
     <View>
         <View style={styles.largeBox}>
-          <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Temperature height={14} width={14}/>
-            <Text style={styles.label}>Ô NHIỄM KHÔNG KHÍ</Text>
-          </View>
-          <View style={{paddingBottom: 30}}>
+          <View>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              <Image source={uvIndexIcon} style={{ height: 14, width: 14 }} />
+              <Text style={styles.label}>Ô NHIỄM KHÔNG KHÍ</Text>
+            </View>
             <Text style={styles.value}>{aqi} - {aqiMessage}</Text>
           </View>
           <View>
@@ -124,11 +125,11 @@ function WeatherDetails({ currentCondition }) {
         </View>
         <View style={styles.row}>
            <View style={styles.box}>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-                <Temperature height={14} width={14}/>
-                <Text style={styles.label}>CHỈ SỐ UV</Text>
-            </View>
-            <View style={{paddingBottom: 20}}>
+            <View>
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                    <Image source={uvIndexIcon} style={{ height: 14, width: 14 }} />
+                    <Text style={styles.label}>CHỈ SỐ UV</Text>
+                </View>
                 <Text style={styles.value}>{uv_index}</Text>
                 <Text style={styles.detail}>{uvIndexMessage}</Text>
             </View>
@@ -137,11 +138,11 @@ function WeatherDetails({ currentCondition }) {
             </View>
            </View>
            <View style={styles.box}>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-                <Temperature height={14} width={14}/>
-                <Text style={styles.label}>GIÓ</Text>
-            </View>
-            <View style={{paddingBottom: 25}}>
+            <View>
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                    <Image source={windIcon} style={{ height: 14, width: 14 }} />
+                    <Text style={styles.label}>GIÓ</Text>
+                </View>
                 <Text style={styles.value}>{wind_kph}</Text>
                 <Text style={styles.detail}>km/h</Text>
             </View>
@@ -152,11 +153,11 @@ function WeatherDetails({ currentCondition }) {
         </View>
         <View style={styles.row}>
            <View style={styles.box}>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-                <Temperature height={14} width={14}/>
-                <Text style={styles.label}>LƯỢNG MƯA</Text>
-            </View>
-            <View style={{paddingBottom: 60}}>
+            <View>
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                    <Image source={rainfallIcon} style={{ height: 14, width: 14 }} />
+                    <Text style={styles.label}>LƯỢNG MƯA</Text>
+                </View>
                 <Text style={styles.value}>{rainfall} mm</Text>
             </View>
             <View>
@@ -164,11 +165,11 @@ function WeatherDetails({ currentCondition }) {
             </View>
            </View>
            <View style={styles.box}>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-                <Temperature height={14} width={14}/>
-                <Text style={styles.label}>CẢM NHẬN</Text>
-            </View>
-            <View style={{paddingBottom: 25}}>
+            <View>
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                    <Image source={uvIndexIcon} style={{ height: 18, width: 18 }} />
+                    <Text style={styles.label}>CẢM NHẬN</Text>
+                </View>
                 <Text style={styles.value}>{feelslike_c}°</Text>
             </View>
             <View>
@@ -178,11 +179,11 @@ function WeatherDetails({ currentCondition }) {
         </View>
         <View style={styles.row}>
            <View style={styles.box}>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-                <Temperature height={14} width={14}/>
-                <Text style={styles.label}>ĐỘ ẨM</Text>
-            </View>
-            <View style={{paddingBottom: 50}}>
+            <View>
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                    <Image source={uvIndexIcon} style={{ height: 14, width: 14 }} />
+                    <Text style={styles.label}>ĐỘ ẨM</Text>
+                </View>
                 <Text style={styles.value}>{humidity}%</Text>
             </View>
             <View>
@@ -190,11 +191,11 @@ function WeatherDetails({ currentCondition }) {
             </View>
            </View>
            <View style={styles.box}>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-                <Temperature height={14} width={14}/>
-                <Text style={styles.label}>TẦM NHÌN</Text>
-            </View>
-            <View style={{paddingBottom: 70}}>
+            <View>
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                    <Image source={visibilityIcon} style={{ height: 14, width: 14 }} />
+                    <Text style={styles.label}>TẦM NHÌN</Text>
+                </View>
                 <Text style={styles.value}>{visibility} km</Text>
             </View>
             <View>
