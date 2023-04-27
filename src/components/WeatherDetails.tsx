@@ -1,10 +1,9 @@
 import {Text, View, StyleSheet, Image, Dimensions } from 'react-native';
 import React from 'react';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {rainfallIcon, uvIndexIcon, visibilityIcon, windIcon} from '../img/HomeIcon';
 const { width } = Dimensions.get('window');
 console.log(width);
-function WeatherDetails({ currentCondition }) {
+function WeatherDetails(currentCondition: any) {
   const aqi = (currentCondition?.aqi??null);
   let aqiMessage;
   if (aqi !== null) {
@@ -114,7 +113,7 @@ function WeatherDetails({ currentCondition }) {
         <View style={styles.largeBox}>
           <View>
             <View style={{display: 'flex', flexDirection: 'row'}}>
-              <Image source={uvIndexIcon} style={{ height: 14, width: 14 }} />
+              <Image source={require('../img/HomeIcon/aqi_icon.png')} style={{ height: 14, resizeMode: 'contain' , marginVertical: 3}}/>
               <Text style={styles.label}>Ô NHIỄM KHÔNG KHÍ</Text>
             </View>
             <Text style={styles.value}>{aqi} - {aqiMessage}</Text>
@@ -127,7 +126,7 @@ function WeatherDetails({ currentCondition }) {
            <View style={styles.box}>
             <View>
                 <View style={{display: 'flex', flexDirection: 'row'}}>
-                    <Image source={uvIndexIcon} style={{ height: 14, width: 14 }} />
+                    <Image source={require('../img/HomeIcon/uv_index_icon.png')} style={{ height: 14, resizeMode: 'contain' , marginVertical: 3}} />
                     <Text style={styles.label}>CHỈ SỐ UV</Text>
                 </View>
                 <Text style={styles.value}>{uv_index}</Text>
@@ -140,7 +139,7 @@ function WeatherDetails({ currentCondition }) {
            <View style={styles.box}>
             <View>
                 <View style={{display: 'flex', flexDirection: 'row'}}>
-                    <Image source={windIcon} style={{ height: 14, width: 14 }} />
+                    <Image source={require('../img/HomeIcon/wind_icon.png')} style={{ height: 14, resizeMode: 'contain' , marginVertical: 3}} />
                     <Text style={styles.label}>GIÓ</Text>
                 </View>
                 <Text style={styles.value}>{wind_kph}</Text>
@@ -155,7 +154,7 @@ function WeatherDetails({ currentCondition }) {
            <View style={styles.box}>
             <View>
                 <View style={{display: 'flex', flexDirection: 'row'}}>
-                    <Image source={rainfallIcon} style={{ height: 14, width: 14 }} />
+                    <Image source={require('../img/HomeIcon/rainfall_icon.png')} style={{ height: 14, resizeMode: 'contain' , marginVertical: 3}} />
                     <Text style={styles.label}>LƯỢNG MƯA</Text>
                 </View>
                 <Text style={styles.value}>{rainfall} mm</Text>
@@ -167,7 +166,7 @@ function WeatherDetails({ currentCondition }) {
            <View style={styles.box}>
             <View>
                 <View style={{display: 'flex', flexDirection: 'row'}}>
-                    <Image source={uvIndexIcon} style={{ height: 18, width: 18 }} />
+                    <Image source={require('../img/HomeIcon/feelslike_icon.png')} style={{ height: 14, resizeMode: 'contain' , marginVertical: 3}} />
                     <Text style={styles.label}>CẢM NHẬN</Text>
                 </View>
                 <Text style={styles.value}>{feelslike_c}°</Text>
@@ -181,7 +180,7 @@ function WeatherDetails({ currentCondition }) {
            <View style={styles.box}>
             <View>
                 <View style={{display: 'flex', flexDirection: 'row'}}>
-                    <Image source={uvIndexIcon} style={{ height: 14, width: 14 }} />
+                    <Image source={require('../img/HomeIcon/humidity_icon.png')} style={{ height: 14, resizeMode: 'contain' , marginVertical: 3}} />
                     <Text style={styles.label}>ĐỘ ẨM</Text>
                 </View>
                 <Text style={styles.value}>{humidity}%</Text>
@@ -193,7 +192,7 @@ function WeatherDetails({ currentCondition }) {
            <View style={styles.box}>
             <View>
                 <View style={{display: 'flex', flexDirection: 'row'}}>
-                    <Image source={visibilityIcon} style={{ height: 14, width: 14 }} />
+                    <Image source={require('../img/HomeIcon/visibility_icon.png')} style={{ height: 14, resizeMode: 'contain' , marginVertical: 3}} />
                     <Text style={styles.label}>TẦM NHÌN</Text>
                 </View>
                 <Text style={styles.value}>{visibility} km</Text>

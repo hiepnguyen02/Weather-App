@@ -31,7 +31,7 @@ function GetCurrentWeather(lat: number | undefined, lon: number | undefined) {
           time: response.data.location.localtime,
           condition_code: response.data.current.condition.code,
           is_day: response.data.current.is_day,
-          aqi: response.data.current.uv, //.air_quality.gb-defra-index,
+          aqi: response.data.current.is_day,  //.gb_defra_index,
           uv_index: response.data.current.uv,
           wind_kph: response.data.current.wind_kph,
           wind_degree: response.data.current.wind_degree,
