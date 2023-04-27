@@ -229,7 +229,7 @@ function LocationScreen() {
             style={{width: '76%'}}
             onChangeText={(text: string) => {
               setSearchText(text);
-              setIsCitiesList(true);
+              // setIsCitiesList(true);
             }}
             onFocus={() => setIsCitiesList(true)}
           />
@@ -254,6 +254,7 @@ function LocationScreen() {
                     navigation.navigate('Details', {
                       item,
                     });
+                    // console.log(item);
                   }}>
                   <Text
                     style={{
@@ -276,10 +277,9 @@ function LocationScreen() {
               data={savedLocation}
               renderItem={object => (
                 <TouchableOpacity
+                  activeOpacity={1}
                   onPress={() => {
-                    navigation.navigate('Details', {
-                      object,
-                    });
+                    navigation.navigate('Details', object);
                   }}>
                   <RenderItem item={object} />
                 </TouchableOpacity>
