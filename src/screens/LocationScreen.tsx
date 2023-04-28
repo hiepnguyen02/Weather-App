@@ -100,7 +100,7 @@ function RenderItem({item}) {
   );
 }
 function LocationScreen() {
-  const [background, setBackground] = React.useState<string>();
+  const [background, setBackground] = React.useState<number>();
   const [searchText, setSearchText] = React.useState<string>('');
   const [cities, loading] = SearchForCities(searchText);
   const [isCitiesList, setIsCitiesList] = React.useState<boolean>(false);
@@ -112,7 +112,7 @@ function LocationScreen() {
     try {
       const value = await AsyncStorage.getItem('background');
       if (value !== null) {
-        setBackground(value);
+        setBackground(parseInt(value));
       }
     } catch (error) {
       // Error retrieving data
@@ -172,12 +172,12 @@ function LocationScreen() {
   useEffect(() => {
     retrieveData();
     getSavedLocation();
-  }, [isCitiesList, navigation]);
+  }, [isCitiesList]);
 
   return (
     <View style={{height: '100%', width: '100%'}}>
       <Video
-        source={background!}
+        source={background}
         style={styles.backgroundVideo}
         muted={true}
         repeat={true}

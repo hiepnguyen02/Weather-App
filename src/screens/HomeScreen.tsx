@@ -11,7 +11,7 @@ import React, {useEffect, useRef} from 'react';
 import HourlyWeatherButton from '../components/HourlyWeatherButton';
 import Humidity from '../components/Humidity';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-
+import WeatherDetails from '../components/WeatherDetails';
 import getCurrentWeather from '../../services/getCurrentWeather';
 
 import GetForecastDay from '../../services/getForecastDay';
@@ -298,15 +298,8 @@ function HomeScreen(this: any) {
               Thông tin chi tiết
             </Text>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              padding: 4,
-            }}>
-            <Humidity />
-            <Humidity />
-            <Humidity />
+          <View>
+            <WeatherDetails currentCondition={currentCondition}/>
           </View>
         </ScrollView>
       </SafeAreaView>

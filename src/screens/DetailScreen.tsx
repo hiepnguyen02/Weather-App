@@ -13,6 +13,7 @@ import Video from 'react-native-video';
 import React, {useEffect, useRef} from 'react';
 import HourlyWeatherButton from '../components/HourlyWeatherButton';
 import Humidity from '../components/Humidity';
+import WeatherDetails from '../components/WeatherDetails';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import getCurrentWeather from '../../services/getCurrentWeather';
@@ -24,7 +25,7 @@ import ForecastDay from '../../model/ForecastDay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GetCurrentLocation from '../../services/getLocationService';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {CommonActions} from '@react-navigation/native';
+import {Back, PinLocation} from '../img/DetailScreenIcon';
 import City from '../../model/City';
 import {get} from 'axios';
 import city from '../../model/City';
@@ -190,11 +191,7 @@ function DetailScreen(navigation) {
   // @ts-ignore
   // @ts-ignore
   // @ts-ignore
-  // const resetAction = StackActions.reset({
-  //   index: 0,
-  //   actions: [NavigationActions.navigate({routeName: 'LocationScreen'})],
-  // });
-
+  console.log('Detail render ne');
   return (
     <View style={{height: '100%', width: '100%'}}>
       <Video
@@ -345,13 +342,9 @@ function DetailScreen(navigation) {
               Thông tin chi tiết
             </Text>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              padding: 4,
-            }}
-          />
+          <View>
+            <WeatherDetails currentCondition={currentCondition}/>
+          </View>
         </ScrollView>
       </SafeAreaView>
     </View>
