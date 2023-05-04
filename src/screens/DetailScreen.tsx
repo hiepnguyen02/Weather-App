@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Image,
 } from 'react-native';
 import Video from 'react-native-video';
 import React, {useEffect, useRef} from 'react';
@@ -88,14 +89,14 @@ function Weekly(dayForecast: ForecastDay[]) {
   );
 }
 
-function DetailScreen({navigation, route}) {
+function DetailScreen(navigation) {
   const currentCondition = getCurrentWeather(
-    route.params?.item.lat,
-    route.params?.item.lon,
+    navigation.route.params.item.lat,
+    navigation.route.params.item.lon,
   );
   const [forecastDay, hourlyForecast] = GetForecastDay(
-    route.params?.item.lat,
-    route.params?.item.lon,
+    navigation.route.params.item.lat,
+    navigation.route.params.item.lon,
   );
   const [backGround, setBackGround] = React.useState<number>();
   const code = currentCondition?.condition_code;
@@ -210,6 +211,7 @@ function DetailScreen({navigation, route}) {
               justifyContent: 'space-between',
               marginLeft: 15,
               marginRight: 15,
+              paddingTop: 10,
             }}>
             <TouchableOpacity
               style={{
@@ -217,17 +219,23 @@ function DetailScreen({navigation, route}) {
                 alignItems: 'center',
               }}
               onPress={() => {
-                storeLocation(route.params?.item);
+                storeLocation(navigation.route.params.item);
               }}>
-              <PinLocation width={20} height={20} />
+              <Image
+                source={require('../img/DetailScreenIcon/location.png')}
+                style={{width: 30, height: 30}}
+              />
               <Text style={{color: 'white'}}>Lưu vị trí</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{backgroundColor: 'transparent', alignItems: 'center'}}
               onPress={() => {
-                navigation.goBack();
+                navigation.navigation.goBack();
               }}>
-              <Back width={20} height={20} />
+              <Image
+                source={require('../img/DetailScreenIcon/back.png')}
+                style={{width: 30, height: 30}}
+              />
               <Text style={{color: 'white'}}>Trở về</Text>
             </TouchableOpacity>
           </View>

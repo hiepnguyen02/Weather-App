@@ -33,6 +33,7 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import LocationScreen from './src/screens/LocationScreen';
 import {createStackNavigator} from '@react-navigation/stack';
 import DetailScreen from './src/screens/DetailScreen';
+import DetailScreenLocation from './src/screens/DetailScreenLocation';
 
 // type SectionProps = PropsWithChildren<{
 //   title: string;
