@@ -1,17 +1,5 @@
 import {Text, View, StyleSheet, Image} from 'react-native';
 import React from 'react';
-import {
-  BlackCloud,
-  BlackCloudAndRain,
-  Cloud,
-  CloudAndMoon,
-  CloudAndRain,
-  CloudAndRainAndMoon,
-  CloudAndRainAndSun,
-  CloudAndSun,
-  Moon,
-  Sun,
-} from '../img';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import HourlyWeather from '../../model/HourlyWeather';
 

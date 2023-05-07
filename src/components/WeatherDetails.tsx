@@ -125,7 +125,7 @@ function WeatherDetails(currentCondition: any) {
           <View style={{display: 'flex', flexDirection: 'row'}}>
             <Image
               source={require('../img/HomeIcon/aqi_icon.png')}
-              style={{height: 14, resizeMode: 'contain', marginVertical: 3}}
+              style={{height: 12, resizeMode: 'contain', marginVertical: 3, marginRight: 3}}
             />
             <Text style={styles.label}>Ô NHIỄM KHÔNG KHÍ</Text>
           </View>
@@ -149,8 +149,10 @@ function WeatherDetails(currentCondition: any) {
               />
               <Text style={styles.label}>CHỈ SỐ UV</Text>
             </View>
-            <Text style={styles.value}>{uv_index}</Text>
-            <Text style={styles.detail}>{uvIndexMessage}</Text>
+            <View style={{marginTop: 8}}>
+              <Text style={styles.value}>{uv_index}</Text>
+              <Text style={styles.detail}>{uvIndexMessage}</Text>
+            </View>
           </View>
           <View>
             <Text style={styles.detail}>{uvIndexMessage2}</Text>
@@ -165,8 +167,10 @@ function WeatherDetails(currentCondition: any) {
               />
               <Text style={styles.label}>GIÓ</Text>
             </View>
-            <Text style={styles.value}>{wind_kph}</Text>
-            <Text style={styles.detail}>km/h</Text>
+            <View style={{marginTop: 8}}>
+              <Text style={styles.value}>{wind_kph}</Text>
+              <Text style={styles.detail}>km/h</Text>
+            </View>
           </View>
           <View>
             <Text style={styles.detail}>Gió thổi hướng {windMessage}.</Text>
@@ -183,7 +187,9 @@ function WeatherDetails(currentCondition: any) {
               />
               <Text style={styles.label}>LƯỢNG MƯA</Text>
             </View>
-            <Text style={styles.value}>{rainfall} mm</Text>
+            <View style={{marginTop: 8}}>
+              <Text style={styles.value}>{rainfall} mm</Text>
+            </View>
           </View>
           <View>
             <Text style={styles.detail}>{rainfallMessage}</Text>
@@ -198,7 +204,9 @@ function WeatherDetails(currentCondition: any) {
               />
               <Text style={styles.label}>CẢM NHẬN</Text>
             </View>
-            <Text style={styles.value}>{feelslike_c}°</Text>
+            <View style={{marginTop: 8}}>
+              <Text style={styles.value}>{feelslike_c}°</Text>
+            </View>
           </View>
           <View>
             <Text style={styles.detail}>{feelsLikeMessage}</Text>
@@ -215,7 +223,9 @@ function WeatherDetails(currentCondition: any) {
               />
               <Text style={styles.label}>ĐỘ ẨM</Text>
             </View>
-            <Text style={styles.value}>{humidity}%</Text>
+            <View style={{marginTop: 8}}>
+              <Text style={styles.value}>{humidity}%</Text>
+            </View>
           </View>
           <View>
             <Text style={styles.detail}>{humidityMessage}</Text>
@@ -230,7 +240,9 @@ function WeatherDetails(currentCondition: any) {
               />
               <Text style={styles.label}>TẦM NHÌN</Text>
             </View>
-            <Text style={styles.value}>{visibility} km</Text>
+            <View style={{marginTop: 8}}>
+              <Text style={styles.value}>{visibility} km</Text>
+            </View>
           </View>
           <View>
             <Text style={styles.detail}>{visibilityMessage}</Text>

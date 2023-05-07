@@ -52,6 +52,7 @@
     "@types/jest": "^29.2.1",
     "@types/node-fetch": "^2.6.2",
     "@types/react": "^18.0.33",
+    "@types/react-native-video": "^5.0.14",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.2.1",
     "eslint": "^8.19.0",

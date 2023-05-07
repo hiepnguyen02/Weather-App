@@ -20,7 +20,6 @@ import getCurrentWeather from '../../services/getCurrentWeather';
 
 import GetForecastDay from '../../services/getForecastDay';
 import HourlyWeather from '../../model/HourlyWeather';
-import GetFutureWeather from '../../services/getFutureWeather';
 import ForecastDay from '../../model/ForecastDay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GetCurrentLocation from '../../services/getLocationService';

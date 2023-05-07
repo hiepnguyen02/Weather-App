@@ -24,6 +24,8 @@ function GetCurrentWeather(lat: number | undefined, lon: number | undefined) {
         },
       })
       .then(response => {
+        //console.log(response.data);
+        //console.log(response.data.current.air_quality['gb-defra-index']);
         setCurrentCondition({
           condition_text: response.data.current.condition.text,
           temp_c: Math.round(parseInt(response.data.current.temp_c)),
@@ -31,7 +33,7 @@ function GetCurrentWeather(lat: number | undefined, lon: number | undefined) {
           time: response.data.location.localtime,
           condition_code: response.data.current.condition.code,
           is_day: response.data.current.is_day,
-          aqi: response.data.current.is_day,  //.gb_defra_index,
+          aqi: response.data.current.air_quality['gb-defra-index'],  //.gb_defra_index,
           uv_index: response.data.current.uv,
           wind_kph: response.data.current.wind_kph,
           wind_degree: response.data.current.wind_degree,
