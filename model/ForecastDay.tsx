@@ -1,4 +1,5 @@
 interface ForecastDay {
+  map(arg0: (a: any) => JSX.Element): import("react").ReactNode;
   maxTemp_c: number;
   minTemp_c: number;
 

@@ -1,28 +1,54 @@
-import {
-  Image,
-  ImageBackground,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import React from 'react';
-import HourlyWeatherButton from '../components/HourlyWeatherButton';
+import React, { useEffect, useState } from 'react';
+import { View, Switch, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import Video from 'react-native-video';
-function SettingsScreen() {
+import FeatherIcon from 'react-native-vector-icons/Feather'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const sections = [
+  {
+    header: 'Giao diện',
+    items: [
+      {id: 'language', icon: 'globe', label: 'Ngôn ngữ', type: 'select', displayLeft: '', displayRight: ''},
+      {id: 'notification', icon: 'bell', label: 'Thông báo', type: 'toggle', displayLeft: '', displayRight: ''},
+      {id: 'tempuratureUnit', icon: 'thermometer', label: 'Nhiệt độ', type: 'toggle', displayLeft: '°F', displayRight: '°C'},
+      {id: 'speedUnit', icon: 'chevrons-right', label: 'Vận tốc', type: 'toggle', displayLeft: 'mph', displayRight: 'kph'},
+      
+    ],
+  },
+  {
+    header: 'Trợ giúp',
+    items: [
+      {id: 'contact', icon: 'mail', label: 'Liên hệ', type: 'link'},
+    ]
+  }
+];
+export default function SettingsScreen() {
+  const [background, setBackground] = React.useState<number>();
+  useEffect(() => {
+    const retrieveData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('background');
+        if (value !== null) {
+          setBackground(parseInt(value));
+        }
+      } catch (error) {
+        // Error retrieving data
+      }
+    };
+    retrieveData();
+  },[]);
+
+  const [form, setForm] = useState({
+    language: 'Tiếng Việt',
+    tempuratureUnit: true,
+    speedUnit: true,
+    notification: true,
+  })
+  console.log(sections)
   return (
-    /*<ImageBackground
-      source={require('../img/Background/home_background.png')}
-      style={styles.container}>
-      <Text style={styles.locationText}>Cochabamba</Text>
-      <Text style={styles.temperatureText}>19°</Text>
-      <Text style={styles.skyText}>Mostly Clear</Text>
-      <Text style={styles.lowHighTemp}>L:19° H:29°</Text>
-      /*{ <HourlyWeatherButton /> }*/
-    //</ImageBackground>
-    <View style={styles.container}>
+    <View style={styles.background}>
       <Video
-        source={require('../img/Background/snowy_day.mp4')}
+        source={background}
         style={styles.backgroundVideo}
         muted={true}
         repeat={true}
@@ -30,48 +56,160 @@ function SettingsScreen() {
         rate={0.5}
         ignoreSilentSwitch={'obey'}
       />
-      <Text style={styles.locationText}>Cochabamba</Text>
-      <Text style={styles.temperatureText}>19°</Text>
-      <Text style={styles.skyText}>Mostly Clear</Text>
-      <Text style={styles.lowHighTemp}>L:19° H:29°</Text>
+      <SafeAreaView style={{flex: 1}}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.title}>Cài đặt</Text>
+            <Text style={styles.subtitle}>Lựa chọn cài đặt theo ý muốn</Text>
+          </View>
+          {sections.map(({header, items}) => (
+            <View style={styles.section} key={header}>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionHeaderText}>{header}</Text> 
+              </View>
+              <View style={styles.sectionBody}>
+                {items.map(({label, id, type, icon, displayLeft, displayRight }) => (
+                  <View style={styles.rowWrapper} key={id}>
+                    
+                      <View style={styles.row}>
+                        <FeatherIcon
+                        name={icon}
+                        color='#616161'
+                        size={22}
+                        style={{ marginRight: 12}}
+                        />
+
+                        <Text style={styles.rowLabel}>{label}</Text>
+
+                        <View style={styles.rowSpacer}/>
+
+                        {type === 'select' && (
+                          <TouchableOpacity>
+                            <Text style={styles.rowValue}>{form[id]}</Text>
+                            
+                          </TouchableOpacity>
+                        )}
+
+                        {type === 'toggle' && (
+                          <TouchableOpacity>
+                            <View style={styles.switch}>
+                              <Text style={styles.rowValue}>{displayLeft}</Text>
+                              <Switch
+                              value={form[id]}
+                              onValueChange={value =>
+                                setForm({ ...form, [id]: value})
+                              }
+                              />
+                              <Text style={styles.rowValue}>{displayRight}</Text>
+                            </View>
+                          </TouchableOpacity>
+                        )}
+
+                        {type === 'link' && (
+                          <TouchableOpacity onPress={() => Linking.openURL('https://www.facebook.com')}>
+                            <FeatherIcon 
+                            name='chevron-right' 
+                            color='#ababab' 
+                            size={22}
+                            />
+                          </TouchableOpacity>
+                        )}
+
+                      </View>
+                    
+                  </View>
+                ))}
+              </View>
+            </View>
+          ))}
+        </ScrollView>
+      </SafeAreaView>
     </View>
   );
 }
 export default SettingsScreen;
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
+  background: {
     width: '100%',
     height: '100%',
   },
-  locationText: {
-    color: '#FFFF',
-    fontWeight: '400',
-    fontSize: 24,
-  },
-  temperatureText: {
-    color: '#FFFF',
-    fontWeight: '300',
-    fontSize: 60,
-  },
-  skyText: {
-    marginBottom: 10,
-    fontWeight: '500',
-    fontSize: 15,
-    color: 'rgba(255, 255, 255, 0.6)',
-  },
-  lowHighTemp: {
-    color: '#FFFF',
-    fontWeight: '400',
-    fontSize: 15,
-  },
   backgroundVideo: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    alignItems: 'stretch',
-    bottom: 0,
-    right: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: -1,
+  },
+  container: {
+    paddingVertical: 24,
+  },
+  header: {
+    paddingHorizontal: 24,
+    marginBottom: 12,
+    paddingVertical: 6,
+    marginHorizontal: 6,
+    backgroundColor: '#f2f2f2',
+    borderRadius: 8,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#1d1d1d',
+  },
+  subtitle: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#929292',
+  },
+  section: {
+    paddingTop: 12,
+  },
+  sectionHeader: {
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+    backgroundColor: '#f2f2f2',
+    borderRadius: 8,
+    marginHorizontal: 6,
+  },
+  sectionHeaderText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1d1d1d',
+    textTransform: 'uppercase',
+    letterSpacing: 1.2,
+  },
+  sectionBody: {
+    marginTop: 12,
+  },
+  rowWrapper: {
+    paddingHorizontal: 12,
+    borderTopWidth: 0,
+    borderColor: '#e3e3e3',
+  },
+  row: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 24,
+    backgroundColor: '#f2f2f2',
+    borderRadius: 8,
+    marginVertical: 6,
+  },
+  rowLabel: {
+    fontSize: 17,
+    fontWeight: '500',
+    color: '#000',
+  },
+  rowSpacer: {
+    flex: 1,
+  },
+  rowValue: {
+    fontSize: 17,
+    fontWeight: '500',
+    color: '#616161',
+    marginRight: 4,
+  },
+  switch: {
+    flexDirection: 'row',
   },
 });
