@@ -14,6 +14,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8BF49F27EC5FFFFDB6401041 /* libPods-Weather_App-Weather_AppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C8C9B1BC60173E6B0F368CB2 /* libPods-Weather_App-Weather_AppTests.a */; };
+		AF1D696C2A12CA200044503A /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = AF1D696B2A12CA200044503A /* URLImage */; };
+		AF1D696E2A12CA200044503A /* URLImageStore in Frameworks */ = {isa = PBXBuildFile; productRef = AF1D696D2A12CA200044503A /* URLImageStore */; };
+		AF91319A2A128887003B4441 /* RNSharedWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = AF9131992A128887003B4441 /* RNSharedWidget.m */; };
+		AFDC92242A1299EF000658FF /* WidgetKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDC92232A1299EF000658FF /* WidgetKitHelper.swift */; };
 		AFF906742A116F0F008E8363 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFF906732A116F0F008E8363 /* WidgetKit.framework */; };
 		AFF906762A116F0F008E8363 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFF906752A116F0F008E8363 /* SwiftUI.framework */; };
 		AFF906792A116F0F008E8363 /* My_WidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF906782A116F0F008E8363 /* My_WidgetBundle.swift */; };
@@ -45,7 +49,7 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		AFF906872A116F11008E8363 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
@@ -71,6 +75,12 @@
 		66765BF9A0523C6F2EA4DE98 /* Pods-Weather_App-Weather_AppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Weather_App-Weather_AppTests.debug.xcconfig"; path = "Target Support Files/Pods-Weather_App-Weather_AppTests/Pods-Weather_App-Weather_AppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6F96E6C2E2C9B785F6895B5F /* libPods-Weather_App.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Weather_App.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Weather_App/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AF9131992A128887003B4441 /* RNSharedWidget.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSharedWidget.m; sourceTree = "<group>"; };
+		AF91319B2A1288C2003B4441 /* RNSharedWidget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNSharedWidget.h; sourceTree = "<group>"; };
+		AFA3796D2A124FDD00DC0320 /* My_WidgetExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = My_WidgetExtensionDebug.entitlements; sourceTree = "<group>"; };
+		AFA3796E2A12505400DC0320 /* Weather_AppDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Weather_AppDebug.entitlements; path = Weather_App/Weather_AppDebug.entitlements; sourceTree = "<group>"; };
+		AFDC92222A1299EF000658FF /* Weather_App-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Weather_App-Bridging-Header.h"; sourceTree = "<group>"; };
+		AFDC92232A1299EF000658FF /* WidgetKitHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetKitHelper.swift; sourceTree = "<group>"; };
 		AFF906722A116F0F008E8363 /* My_WidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = My_WidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AFF906732A116F0F008E8363 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		AFF906752A116F0F008E8363 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -98,6 +108,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF1D696C2A12CA200044503A /* URLImage in Frameworks */,
+				AF1D696E2A12CA200044503A /* URLImageStore in Frameworks */,
 				0FC72A19F4FE5B8A911E0C89 /* libPods-Weather_App.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -134,12 +146,17 @@
 		13B07FAE1A68108700A75B9A /* Weather_App */ = {
 			isa = PBXGroup;
 			children = (
+				AFA3796E2A12505400DC0320 /* Weather_AppDebug.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				AF9131992A128887003B4441 /* RNSharedWidget.m */,
+				AF91319B2A1288C2003B4441 /* RNSharedWidget.h */,
+				AFDC92232A1299EF000658FF /* WidgetKitHelper.swift */,
+				AFDC92222A1299EF000658FF /* Weather_App-Bridging-Header.h */,
 			);
 			name = Weather_App;
 			sourceTree = "<group>";
@@ -166,6 +183,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				AFA3796D2A124FDD00DC0320 /* My_WidgetExtensionDebug.entitlements */,
 				13B07FAE1A68108700A75B9A /* Weather_App */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* Weather_AppTests */,
@@ -257,6 +275,10 @@
 				AFF906852A116F11008E8363 /* PBXTargetDependency */,
 			);
 			name = Weather_App;
+			packageProductDependencies = (
+				AF1D696B2A12CA200044503A /* URLImage */,
+				AF1D696D2A12CA200044503A /* URLImageStore */,
+			);
 			productName = Weather_App;
 			productReference = 13B07F961A680F5B00A75B9A /* Weather_App.app */;
 			productType = "com.apple.product-type.application";
@@ -292,7 +314,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1420;
 					};
 					AFF906712A116F0F008E8363 = {
 						CreatedOnToolsVersion = 14.2;
@@ -308,6 +330,9 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
+			packageReferences = (
+				AF1D696A2A12CA200044503A /* XCRemoteSwiftPackageReference "url-image" */,
+			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -510,7 +535,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				AFF906832A116F11008E8363 /* My_Widget.intentdefinition in Sources */,
+				AFDC92242A1299EF000658FF /* WidgetKitHelper.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				AF91319A2A128887003B4441 /* RNSharedWidget.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -546,6 +573,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 66765BF9A0523C6F2EA4DE98 /* Pods-Weather_App-Weather_AppTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -573,6 +601,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0FC6B6FB58CF267B59E8C404 /* Pods-Weather_App-Weather_AppTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = Weather_AppTests/Info.plist;
@@ -600,12 +629,15 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Weather_App/Weather_AppDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H4U2QZQ8R2;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Weather_App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = weather_app;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -616,10 +648,11 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "weather-app";
+				PRODUCT_BUNDLE_IDENTIFIER = "group.com.hiepnguyen.weather-app";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = hiepnguyen;
 				PRODUCT_NAME = Weather_App;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Weather_App-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -638,6 +671,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H4U2QZQ8R2;
 				INFOPLIST_FILE = Weather_App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = weather_app;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -652,6 +687,7 @@
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = hiepnguyen;
 				PRODUCT_NAME = Weather_App;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Weather_App-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -805,6 +841,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = My_WidgetExtensionDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -824,8 +861,9 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "hiepnguyen.My-Widget";
+				PRODUCT_BUNDLE_IDENTIFIER = "group.com.hiepnguyen.weather-app.widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -916,6 +954,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AF1D696A2A12CA200044503A /* XCRemoteSwiftPackageReference "url-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dmytro-anokhin/url-image";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AF1D696B2A12CA200044503A /* URLImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF1D696A2A12CA200044503A /* XCRemoteSwiftPackageReference "url-image" */;
+			productName = URLImage;
+		};
+		AF1D696D2A12CA200044503A /* URLImageStore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF1D696A2A12CA200044503A /* XCRemoteSwiftPackageReference "url-image" */;
+			productName = URLImageStore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

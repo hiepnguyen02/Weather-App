@@ -23,13 +23,13 @@ import GetFutureWeather from '../../services/getFutur          eWeather';
 import ForecastDay from '../../model/ForecastDay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GetCurrentLocation from '../../services/getLocationService';
-import SharedGroupPreferences from 'react-native-shared-group-preferences';
+
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import notifee from '@notifee/react-native';
 
 const TopTab = createMaterialTopTabNavigator();
-const group = 'group.asap';
-
+const group = 'group.com.hiepnguyen.my_widget';
+const SharedGroupPreferences = NativeModules.RNSharedWidget;
 const SharedStorage = NativeModules.SharedStorage;
 function Hourly(hourlyWeather: HourlyWeather[]) {
   console.log('Hour render ne');
@@ -47,13 +47,13 @@ function Hourly(hourlyWeather: HourlyWeather[]) {
           alignItems: 'center',
         }}>
         {hourlyWeather[0].map(a =>
-          a.time.slice(11, 13) > time ? (
+          a.time?.slice(11, 13) > time ? (
             <HourlyWeatherButton
               // time={a.time}
               // temp_c={a.temp_c}
               // condition_code={a.condition_code}
               hourlyWeather={a}
-              key={parseInt(a.time.slice(11, 13))}
+              key={parseInt(a?.time.slice(11, 13))}
               isHourlyButton={true}
             />
           ) : null,
@@ -81,7 +81,7 @@ function Weekly(dayForecast: ForecastDay[]) {
             // temp_c={a.temp_c}
             // condition_code={a.condition_code}
             hourlyWeather={a}
-            key={parseInt(a.date.slice(8, 10))}
+            key={parseInt(a.date?.slice(8, 10))}
             isHourlyButton={false}
           />
         ))}
@@ -109,21 +109,37 @@ function HomeScreen(this: any) {
   const handleSubmit = async () => {
     try {
       // iOS
-      await SharedGroupPreferences.setItem('widgetKey', 'hello', group);
+      await SharedGroupPreferences.setData(
+        'widgetKey',
+        JSON.stringify({
+          name: currentCondition?.name,
+          condition_text: currentCondition?.condition_text,
+          condition_icon: `https:${currentCondition?.condition_icon}`,
+          temp: currentCondition?.temp_c,
+        }),
+        (status: number | null) => {
+          console.log('--------------------------');
+          console.log('status: ', status);
+          console.log('--------------------------');
+        },
+      );
     } catch (error) {
       console.log({error});
     }
-
-    SharedStorage.set(
-      JSON.stringify({
-        name: currentCondition?.name,
-        degree: `${currentCondition?.temp_c}°C`,
-        conditionText: currentCondition?.condition_text,
-        conditionIcon: forecastDay
-          ? `https:${forecastDay[0]?.icon_link}`
-          : 'https://cdn.weatherapi.com/weather/64x64/day/122.png',
-      }),
-    );
+    try {
+      await SharedStorage.set(
+        JSON.stringify({
+          name: currentCondition?.name,
+          degree: `${currentCondition?.temp_c}°C`,
+          conditionText: currentCondition?.condition_text,
+          conditionIcon: forecastDay
+            ? `https:${forecastDay[0]?.icon_link}`
+            : 'https://cdn.weatherapi.com/weather/64x64/day/122.png',
+        }),
+      );
+    } catch (error) {
+      console.log({error});
+    }
   };
 
   const code = currentCondition?.condition_code;

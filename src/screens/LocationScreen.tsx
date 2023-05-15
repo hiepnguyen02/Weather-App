@@ -217,8 +217,8 @@ function LocationScreen({navigate: any}) {
   }, [isCitiesList]);
   // getBackground();
   return (
-    <View style={{height: '100%', width: '100%'}}>
-      <Video
+    <View style={{height: '100%', width: '100%', backgroundColor: '#3C3C3C'}}>
+      {/* <Video
         source={videoBackground}
         style={styles.backgroundVideo}
         muted={true}
@@ -226,7 +226,7 @@ function LocationScreen({navigate: any}) {
         resizeMode={'cover'}
         rate={0.5}
         ignoreSilentSwitch={'obey'}
-      />
+      /> */}
       <SafeAreaView style={styles.container}>
         {/* <SearchBar
           platform="android"
