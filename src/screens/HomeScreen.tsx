@@ -5,6 +5,9 @@ import {
   Text,
   View,
   ScrollView,
+  NativeModules,
+  Touchable,
+  Button,
 } from 'react-native';
 import Video from 'react-native-video';
 import React, {useEffect, useRef} from 'react';
@@ -16,13 +19,18 @@ import getCurrentWeather from '../../services/getCurrentWeather';
 
 import GetForecastDay from '../../services/getForecastDay';
 import HourlyWeather from '../../model/HourlyWeather';
-import GetFutureWeather from '../../services/getFutureWeather';
+import GetFutureWeather from '../../services/getFutur          eWeather';
 import ForecastDay from '../../model/ForecastDay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GetCurrentLocation from '../../services/getLocationService';
+import SharedGroupPreferences from 'react-native-shared-group-preferences';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import notifee from '@notifee/react-native';
 
 const TopTab = createMaterialTopTabNavigator();
+const group = 'group.asap';
 
+const SharedStorage = NativeModules.SharedStorage;
 function Hourly(hourlyWeather: HourlyWeather[]) {
   console.log('Hour render ne');
   const time = parseInt(hourlyWeather[1]?.slice(11, 13));
@@ -83,7 +91,6 @@ function Weekly(dayForecast: ForecastDay[]) {
 }
 
 function HomeScreen(this: any) {
-  console.log('Home render ne');
   const location = GetCurrentLocation();
   const currentCondition = getCurrentWeather(
     location?.latitude,
@@ -94,10 +101,31 @@ function HomeScreen(this: any) {
     location?.longitude,
   );
   const [backGround, setBackGround] = React.useState<string>();
+  const [videoBackground, setVideoBackground] = React.useState<number>();
   //const [imageLoaded, setImageLoaded] = React.useState(false);
   /*const onImageLoad = () => {
         setImageLoaded(true);
       };*/
+  const handleSubmit = async () => {
+    try {
+      // iOS
+      await SharedGroupPreferences.setItem('widgetKey', 'hello', group);
+    } catch (error) {
+      console.log({error});
+    }
+
+    SharedStorage.set(
+      JSON.stringify({
+        name: currentCondition?.name,
+        degree: `${currentCondition?.temp_c}°C`,
+        conditionText: currentCondition?.condition_text,
+        conditionIcon: forecastDay
+          ? `https:${forecastDay[0]?.icon_link}`
+          : 'https://cdn.weatherapi.com/weather/64x64/day/122.png',
+      }),
+    );
+  };
+
   const code = currentCondition?.condition_code;
   const day = currentCondition?.is_day;
   const clear_day = [1000];
@@ -126,7 +154,17 @@ function HomeScreen(this: any) {
   ];
   const storeData = async () => {
     try {
-      await AsyncStorage.setItem('background', backGround!.toString());
+      await AsyncStorage.setItem('wallpaper', JSON.stringify(videoBackground));
+    } catch (error) {
+      // Error saving data
+    }
+  };
+  const storeCurrentCondition = async () => {
+    try {
+      await AsyncStorage.setItem(
+        'currentCondition',
+        JSON.stringify(currentCondition),
+      );
     } catch (error) {
       // Error saving data
     }
@@ -136,46 +174,40 @@ function HomeScreen(this: any) {
     if (code != null) {
       if (day == 1) {
         if (clear_day.includes(code)) {
-          setBackGround(require('../img/Background/clear_day.mp4'));
+          setVideoBackground(require('../img/Background/clear_day.mp4'));
         } else if (cloudy_day.includes(code)) {
-          setBackGround(require('../img/Background/cloudy_day.mp4'));
+          setVideoBackground(require('../img/Background/cloudy_day.mp4'));
         } else if (rainy_day.includes(code)) {
-          setBackGround(require('../img/Background/rainy_day.mp4'));
+          setVideoBackground(require('../img/Background/rainy_day.mp4'));
         }
       } else if (day == 0) {
         if (clear_night.includes(code)) {
-          setBackGround(require('../img/Background/clear_night.mp4'));
+          setVideoBackground(require('../img/Background/clear_night.mp4'));
         } else if (cloudy_night.includes(code)) {
-          setBackGround(require('../img/Background/cloudy_night.mp4'));
+          setVideoBackground(require('../img/Background/cloudy_night.mp4'));
         } else if (rainy_night.includes(code)) {
-          setBackGround(require('../img/Background/rainy_night.mp4'));
+          setVideoBackground(require('../img/Background/rainy_night.mp4'));
         }
       }
     } else {
-      setBackGround(require('../img/Background/snowy_day.mp4'));
-      setBackGround(require('../img/Background/snowy_day.mp4'));
+      setVideoBackground(require('../img/Background/snowy_day.mp4'));
     }
     storeData();
-  }, [
-    clear_day,
-    clear_night,
-    cloudy_day,
-    cloudy_night,
-    code,
-    day,
-    rainy_day,
-    rainy_night,
-  ]);
+    storeCurrentCondition();
+    // handleWidget();
+  }, [code, day, storeData, storeCurrentCondition]);
   // console.log(typeof require('../img/Background/rainy_night.jpg'));
   // console.log(hourlyForecast);
   // @ts-ignore
   // @ts-ignore
   // @ts-ignore
+  handleSubmit();
 
+  // onDisplayNotification();
   return (
     <View style={{height: '100%', width: '100%'}}>
       <Video
-        source={backGround}
+        source={videoBackground}
         style={styles.backgroundVideo}
         muted={true}
         repeat={true}
@@ -299,7 +331,7 @@ function HomeScreen(this: any) {
             </Text>
           </View>
           <View>
-            <WeatherDetails currentCondition={currentCondition}/>
+            <WeatherDetails currentCondition={currentCondition} />
           </View>
         </ScrollView>
       </SafeAreaView>

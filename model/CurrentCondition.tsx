@@ -7,5 +7,6 @@ interface CurrentCondition {
   time: string;
   condition_code: number;
   is_day: number;
+  condition_icon: string;
 }
 export default CurrentCondition;

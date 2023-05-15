@@ -22,6 +22,9 @@ import {useNavigation} from '@react-navigation/native';
 import GetSavedLocationDetail from '../../services/getSavedLocationDetail';
 import {color} from '@rneui/base';
 import {SwipeListView} from 'react-native-swipe-list-view';
+import CurrentCondition from '../../model/CurrentCondition';
+import GetCurrentLocation from '../../services/getLocationService';
+import getCurrentWeather from '../../services/getCurrentWeather';
 // import {SearchBar} from 'react-native-elements';
 
 function RenderItem({item}) {
@@ -99,20 +102,53 @@ function RenderItem({item}) {
     </View>
   );
 }
-function LocationScreen() {
+function LocationScreen({navigate: any}) {
   const [background, setBackground] = React.useState<number>();
   const [searchText, setSearchText] = React.useState<string>('');
   const [cities, loading] = SearchForCities(searchText);
   const [isCitiesList, setIsCitiesList] = React.useState<boolean>(false);
   const navigation = useNavigation();
   const [savedLocation, setSavedLocation] = React.useState<City[]>();
-  console.log(isCitiesList);
 
-  const retrieveData = async () => {
+  // const location = GetCurrentLocation();
+  // const currentCondition = getCurrentWeather(
+  //   location?.latitude,
+  //   location?.longitude,
+  // );
+  // const code = currentCondition?.condition_code;
+  // const day = currentCondition?.is_day;
+  // const clear_day = [1000];
+  // const clear_night = [1000];
+
+  // const rainy_day = [
+  //   1072, 1087, 1189, 1192, 1195, 1198, 1201, 1237, 1243, 1246, 1249, 1252,
+  //   1261, 1264, 1276, 1063, 1180, 1183, 1186, 1240, 1273, 1066, 1069, 1114,
+  //   1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258, 1279,
+  //   1282,
+  // ];
+  // const cloudy_day = [
+  //   1003, 1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171,
+  // ];
+  // const cloudy_night = [
+  //   1003, 1006, 1009, 1030, 1135, 1147, 1150, 1153, 1168, 1171, 1003,
+  // ];
+  // const rainy_night = [
+  //   1072, 1087, 1189, 1192, 1195, 1198, 1201, 1237, 1243, 1246, 1249, 1252,
+  //   1261, 1264, 1276, 1063, 1180, 1183, 1186, 1240, 1273, 1066, 1069, 1114,
+  //   1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258, 1279,
+  //   1282,
+  // ];
+  const [videoBackground, setVideoBackground] = React.useState<number>();
+
+  const getBackground = async () => {
+    console.log('lay background');
+
     try {
-      const value = await AsyncStorage.getItem('background');
+      const value = await AsyncStorage.getItem('wallpaper');
+
       if (value !== null) {
-        setBackground(parseInt(value));
+        let arr = JSON.parse(value);
+        setVideoBackground(parseInt(arr, 10));
       }
     } catch (error) {
       // Error retrieving data
@@ -150,34 +186,40 @@ function LocationScreen() {
     }
   };
 
-  // const getSavedLocationDetails = async () => {
-  //   try {
-  //     const arr = GetSavedLocationDetails(
-  //       savedLocation[0].lat,
-  //       savedLocation[0].lon,
-  //     );
-  //     console.log(arr);
-  //   } catch (error) {
-  //     // Error retrieving data
-  //   }
-  // };
   // useEffect(() => {
-  //   console.log(savedLocation);
-  //   retrieveData();
-  //   getSavedLocation();
-  //   console.log('hhh');
-  //   // getSavedLocationDetails();
-  // }, []);
+  //   if (code != null) {
+  //     if (day == 1) {
+  //       if (clear_day.includes(code)) {
+  //         setVideoBackground(require('../img/Background/clear_day.mp4'));
+  //       } else if (cloudy_day.includes(code)) {
+  //         setVideoBackground(require('../img/Background/cloudy_day.mp4'));
+  //       } else if (rainy_day.includes(code)) {
+  //         setVideoBackground(require('../img/Background/rainy_day.mp4'));
+  //       }
+  //     } else if (day == 0) {
+  //       if (clear_night.includes(code)) {
+  //         setVideoBackground(require('../img/Background/clear_night.mp4'));
+  //       } else if (cloudy_night.includes(code)) {
+  //         setVideoBackground(require('../img/Background/rainy_night.mp4'));
+  //       } else if (rainy_night.includes(code)) {
+  //         setVideoBackground(require('../img/Background/rainy_night.mp4'));
+  //       }
+  //     }
+  //   } else {
+  //     setVideoBackground(require('../img/Background/snowy_day.mp4'));
+  //   }
+
+  //   // handleWidget();
+  // }, [code, day]);
 
   useEffect(() => {
-    retrieveData();
     getSavedLocation();
   }, [isCitiesList]);
-
+  // getBackground();
   return (
     <View style={{height: '100%', width: '100%'}}>
       <Video
-        source={background}
+        source={videoBackground}
         style={styles.backgroundVideo}
         muted={true}
         repeat={true}
@@ -229,7 +271,7 @@ function LocationScreen() {
             style={{width: '76%'}}
             onChangeText={(text: string) => {
               setSearchText(text);
-              // setIsCitiesList(true);
+              setIsCitiesList(true);
             }}
             onFocus={() => setIsCitiesList(true)}
           />
