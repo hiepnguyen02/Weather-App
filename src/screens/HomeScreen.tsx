@@ -26,6 +26,7 @@ import GetCurrentLocation from '../../services/getLocationService';
 
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import notifee from '@notifee/react-native';
+import Setting from '../../model/Setting';
 
 const TopTab = createMaterialTopTabNavigator();
 const group = 'group.com.hiepnguyen.my_widget';
@@ -90,7 +91,9 @@ function Weekly(dayForecast: ForecastDay[]) {
   );
 }
 
-function HomeScreen(this: any) {
+function HomeScreen({navigation}) {
+  console.log(navigation);
+
   const location = GetCurrentLocation();
   const currentCondition = getCurrentWeather(
     location?.latitude,
@@ -115,7 +118,9 @@ function HomeScreen(this: any) {
           name: currentCondition?.name,
           condition_text: currentCondition?.condition_text,
           condition_icon: `https:${currentCondition?.condition_icon}`,
-          temp: currentCondition?.temp_c,
+          temp: setting?.fDegree
+            ? Math.round(currentCondition?.temp_c * 1.8 + 32)
+            : currentCondition?.temp_c,
         }),
         (status: number | null) => {
           console.log('--------------------------');
@@ -130,7 +135,11 @@ function HomeScreen(this: any) {
       await SharedStorage.set(
         JSON.stringify({
           name: currentCondition?.name,
-          degree: `${currentCondition?.temp_c}°C`,
+          degree: `${
+            setting?.fDegree
+              ? Math.round(currentCondition?.temp_c * 1.8 + 32)
+              : currentCondition?.temp_c
+          }°C`,
           conditionText: currentCondition?.condition_text,
           conditionIcon: forecastDay
             ? `https:${forecastDay[0]?.icon_link}`
@@ -168,6 +177,26 @@ function HomeScreen(this: any) {
     1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258, 1279,
     1282,
   ];
+  const [setting, getSetting] = React.useState<Setting>();
+  const getSettingData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('setting');
+
+      if (value !== null) {
+        let val = JSON.parse(value);
+        getSetting({fDegree: val.fDegree, notification: val.noti});
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getSettingData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
   const storeData = async () => {
     try {
       await AsyncStorage.setItem('wallpaper', JSON.stringify(videoBackground));
@@ -210,6 +239,8 @@ function HomeScreen(this: any) {
     }
     storeData();
     storeCurrentCondition();
+
+    // getSettingData();
     // handleWidget();
   }, [code, day, storeData, storeCurrentCondition]);
   // console.log(typeof require('../img/Background/rainy_night.jpg'));
@@ -218,8 +249,8 @@ function HomeScreen(this: any) {
   // @ts-ignore
   // @ts-ignore
   handleSubmit();
+  // getSettingData();
 
-  // onDisplayNotification();
   return (
     <View style={{height: '100%', width: '100%'}}>
       <Video
@@ -240,16 +271,32 @@ function HomeScreen(this: any) {
             }}>
             <Text style={styles.locationText}>{currentCondition?.name}</Text>
             <Text style={styles.temperatureText}>
-              {currentCondition?.temp_c}°
+              {setting?.fDegree
+                ? Math.round(currentCondition?.temp_c * 1.8 + 32)
+                : currentCondition?.temp_c}
+              °
             </Text>
             <Text style={styles.skyText}>
               {currentCondition?.condition_text}
             </Text>
             <Text style={styles.lowHighTemp}>
               Thấp nhất:
-              {Math.round(forecastDay ? forecastDay[0].minTemp_c : null)}° Cao
-              nhất:
-              {Math.round(forecastDay ? forecastDay[0].maxTemp_c : null)}°
+              {setting?.fDegree
+                ? Math.round(
+                    Math.round(forecastDay ? forecastDay[0].minTemp_c : null) *
+                      1.8 +
+                      32,
+                  )
+                : Math.round(forecastDay ? forecastDay[0].minTemp_c : null)}
+              ° Cao nhất:
+              {setting?.fDegree
+                ? Math.round(
+                    Math.round(forecastDay ? forecastDay[0].maxTemp_c : null) *
+                      1.8 +
+                      32,
+                  )
+                : Math.round(forecastDay ? forecastDay[0].maxTemp_c : null)}
+              °
             </Text>
             <View style={{marginTop: 7}}>
               <View style={{flexDirection: 'row', alignContent: 'center'}}>

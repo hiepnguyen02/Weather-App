@@ -25,11 +25,26 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import CurrentCondition from '../../model/CurrentCondition';
 import GetCurrentLocation from '../../services/getLocationService';
 import getCurrentWeather from '../../services/getCurrentWeather';
+import Setting from '../../model/Setting';
 // import {SearchBar} from 'react-native-elements';
 
 function RenderItem({item}) {
   const detail = GetSavedLocationDetail(item.item.lat, item.item.lon);
+  const [setting, getSetting] = React.useState<Setting>();
+  const getSettingData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('setting');
 
+      if (value !== null) {
+        let val = JSON.parse(value);
+        getSetting({fDegree: val.fDegree, notification: val.noti});
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
+
+  getSettingData();
   return (
     <View style={{padding: 10}}>
       <ImageBackground
@@ -56,7 +71,10 @@ function RenderItem({item}) {
               paddingTop: 40,
               paddingLeft: 30,
             }}>
-            {Math.round(detail?.avgTemp_c)}°
+            {setting?.fDegree
+              ? Math.round(Math.round(detail?.avgTemp_c) * 1.8 + 32)
+              : Math.round(detail?.avgTemp_c)}
+            °
           </Text>
           <Image
             source={{
@@ -74,8 +92,14 @@ function RenderItem({item}) {
             paddingLeft: 20,
           }}>
           Thấp nhất:
-          {Math.round(detail?.minTemp_c)}° Cao nhất:
-          {Math.round(detail?.maxTemp_c)}°
+          {setting?.fDegree
+            ? Math.round(Math.round(detail?.minTemp_c) * 1.8 + 32)
+            : Math.round(detail?.minTemp_c)}
+          ° Cao nhất:
+          {setting?.fDegree
+            ? Math.round(Math.round(detail?.maxTemp_c) * 1.8 + 32)
+            : Math.round(detail?.maxTemp_c)}
+          °
         </Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text

@@ -29,6 +29,7 @@ import {Back, PinLocation} from '../img/DetailScreenIcon';
 import City from '../../model/City';
 import {get} from 'axios';
 import city from '../../model/City';
+import Setting from '../../model/Setting';
 
 const TopTab = createMaterialTopTabNavigator();
 
@@ -134,6 +135,27 @@ function DetailScreen(navigation) {
       // Error saving data
     }
   };
+  const [setting, getSetting] = React.useState<Setting>();
+  const getSettingData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('setting');
+
+      if (value !== null) {
+        let val = JSON.parse(value);
+        getSetting({fDegree: val.fDegree, notification: val.noti});
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.navigation.addListener('focus', () => {
+      getSettingData();
+    });
+
+    return unsubscribe;
+  }, [navigation.navigation]);
   const storeLocation = async (city: City) => {
     let cities = await AsyncStorage.getItem('location');
     let arr = JSON.parse(cities!) == null ? [] : JSON.parse(cities!);
@@ -247,16 +269,32 @@ function DetailScreen(navigation) {
             <Text style={styles.time}>{currentTime}</Text>
             <Text style={styles.locationText}>{currentCondition?.name}</Text>
             <Text style={styles.temperatureText}>
-              {currentCondition?.temp_c}°
+              {setting?.fDegree
+                ? Math.round(currentCondition?.temp_c * 1.8 + 32)
+                : currentCondition?.temp_c}
+              °
             </Text>
             <Text style={styles.skyText}>
               {currentCondition?.condition_text}
             </Text>
             <Text style={styles.lowHighTemp}>
               Thấp nhất:
-              {Math.round(forecastDay ? forecastDay[0].minTemp_c : null)}° Cao
-              nhất:
-              {Math.round(forecastDay ? forecastDay[0].maxTemp_c : null)}°
+              {setting?.fDegree
+                ? Math.round(
+                    Math.round(forecastDay ? forecastDay[0].minTemp_c : null) *
+                      1.8 +
+                      32,
+                  )
+                : Math.round(forecastDay ? forecastDay[0].minTemp_c : null)}
+              ° Cao nhất:
+              {setting?.fDegree
+                ? Math.round(
+                    Math.round(forecastDay ? forecastDay[0].maxTemp_c : null) *
+                      1.8 +
+                      32,
+                  )
+                : Math.round(forecastDay ? forecastDay[0].maxTemp_c : null)}
+              °
             </Text>
             <View style={{marginTop: 7}}>
               <View style={{flexDirection: 'row', alignContent: 'center'}} />
@@ -343,7 +381,7 @@ function DetailScreen(navigation) {
             </Text>
           </View>
           <View>
-            <WeatherDetails currentCondition={currentCondition}/>
+            <WeatherDetails currentCondition={currentCondition} />
           </View>
         </ScrollView>
       </SafeAreaView>

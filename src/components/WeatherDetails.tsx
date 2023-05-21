@@ -1,9 +1,27 @@
 import {Text, View, StyleSheet, Image, Dimensions} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import Setting from '../../model/Setting';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const {width} = Dimensions.get('window');
 console.log(width);
 function WeatherDetails(currentCondition: any) {
+  const [setting, getSetting] = React.useState<Setting>();
+  const getSettingData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('setting');
+
+      if (value !== null) {
+        let val = JSON.parse(value);
+        getSetting({fDegree: val.fDegree, notification: val.noti});
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
+
+  getSettingData();
+
   const aqi = currentCondition.currentCondition?.aqi;
   let aqiMessage;
   if (aqi !== null) {
@@ -198,7 +216,12 @@ function WeatherDetails(currentCondition: any) {
               />
               <Text style={styles.label}>CẢM NHẬN</Text>
             </View>
-            <Text style={styles.value}>{feelslike_c}°</Text>
+            <Text style={styles.value}>
+              {setting?.fDegree
+                ? Math.round(feelslike_c * 1.8 + 32)
+                : feelslike_c}
+              °
+            </Text>
           </View>
           <View>
             <Text style={styles.detail}>{feelsLikeMessage}</Text>

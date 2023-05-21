@@ -14,6 +14,8 @@ import {
 } from '../img';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import HourlyWeather from '../../model/HourlyWeather';
+import Setting from '../../model/Setting';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function HourlyWeatherButton(
   hourlyWeather: any,
@@ -24,6 +26,21 @@ function HourlyWeatherButton(
   const code = hourlyWeather.isHourlyButton
     ? hourlyWeather.hourlyWeather?.condition_code
     : hourlyWeather.hourlyWeather.condition_code;
+  const [setting, getSetting] = React.useState<Setting>();
+  const getSettingData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('setting');
+
+      if (value !== null) {
+        let val = JSON.parse(value);
+        getSetting({fDegree: val.fDegree, notification: val.noti});
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
+
+  getSettingData();
   // const img = require(hourlyWeather.hourlyWeather
   //   ? hourlyWeather.hourlyWeather?.icon_link
   //   : 0);
@@ -44,11 +61,21 @@ function HourlyWeatherButton(
         style={{height: 60, width: 60}}
       />
       <Text style={{color: Colors.white}}>
-        {Math.round(
-          hourlyWeather.isHourlyButton
-            ? hourlyWeather.hourlyWeather.temp_c
-            : hourlyWeather.hourlyWeather.avgTemp_c,
-        )}
+        {setting?.fDegree
+          ? Math.round(
+              Math.round(
+                hourlyWeather.isHourlyButton
+                  ? hourlyWeather.hourlyWeather.temp_c
+                  : hourlyWeather.hourlyWeather.avgTemp_c,
+              ) *
+                1.8 +
+                32,
+            )
+          : Math.round(
+              hourlyWeather.isHourlyButton
+                ? hourlyWeather.hourlyWeather.temp_c
+                : hourlyWeather.hourlyWeather.avgTemp_c,
+            )}
         °
       </Text>
     </View>

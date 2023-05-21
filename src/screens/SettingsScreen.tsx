@@ -7,6 +7,7 @@ import {
   View,
   Switch,
   Platform,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import HourlyWeatherButton from '../components/HourlyWeatherButton';
@@ -17,10 +18,33 @@ import ForecastDay from '../../model/ForecastDay';
 import {AndroidStyle} from '@notifee/react-native';
 import CurrentCondition from '../../model/CurrentCondition';
 function SettingsScreen() {
-  const [videoBackground, setVideoBackground] = React.useState<number>();
+  const [fDegree, setFDegree] = React.useState<boolean>();
   const [noti, setNoti] = React.useState<number>();
   const [currentCondition, setCurrentCondition] =
     React.useState<CurrentCondition>();
+  const storeData = async (fDegree: boolean, noti: boolean) => {
+    try {
+      await AsyncStorage.setItem(
+        'setting',
+        JSON.stringify({fDegree: fDegree, noti: noti}),
+      );
+    } catch (error) {
+      // Error saving data
+    }
+  };
+  const setting = async () => {
+    try {
+      const value = await AsyncStorage.getItem('setting');
+
+      if (value !== null) {
+        let val = JSON.parse(value);
+        setFDegree(val.fDegree);
+        setNoti(val.noti);
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
   const getCurrentCondition = async () => {
     try {
       const value = await AsyncStorage.getItem('currentCondition');
@@ -46,7 +70,11 @@ function SettingsScreen() {
     // Display a notification
     await notifee.displayNotification({
       title: `Thời tiết tại ${currentCondition?.name}`,
-      body: `Nhiệt độ:   ${currentCondition?.temp_c}°,  ${currentCondition?.condition_text} `,
+      body: `Nhiệt độ:   ${
+        fDegree
+          ? Math.round(currentCondition?.temp_c * 1.8 + 32)
+          : currentCondition?.temp_c
+      }°,  ${currentCondition?.condition_text} `,
 
       android: {
         channelId,
@@ -77,6 +105,10 @@ function SettingsScreen() {
     await notifee.cancelAllNotifications();
   }
   getCurrentCondition();
+  useEffect(() => {
+    setting();
+  }, []);
+
   return (
     /*<ImageBackground
       source={require('../img/Background/home_background.png')}
@@ -147,10 +179,56 @@ function SettingsScreen() {
           thumbColor={noti ? '#f5dd4b' : '#f4f3f4'}
           ios_backgroundColor="#3e3e3e"
           onValueChange={value => {
+            storeData(fDegree!, value);
             setNoti(value!);
             value ? onDisplayNotification() : cancelDisplayNotification();
           }}
           value={noti}
+        />
+      </View>
+      <View
+        style={
+          Platform.OS == 'ios'
+            ? {
+                borderColor: 'white',
+                borderRadius: 20,
+                borderWidth: 1,
+                padding: 15,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginLeft: 20,
+                marginRight: 20,
+                marginTop: 26,
+              }
+            : {
+                borderColor: 'white',
+                borderRadius: 20,
+                borderWidth: 1,
+                padding: 15,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 26,
+              }
+        }>
+        <View style={{flexDirection: 'row'}}>
+          <Image
+            source={require('../img/setting/f_degree.png')}
+            style={{width: 30, height: 30, marginLeft: 10, marginRight: 10}}
+          />
+          <Text style={{color: 'white', fontSize: 20}}>Độ F</Text>
+        </View>
+        <Switch
+          trackColor={{false: '#767577', true: '#81b0ff'}}
+          thumbColor={fDegree ? '#f5dd4b' : '#f4f3f4'}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={value => {
+            storeData(value, noti!);
+            setFDegree(value!);
+            value
+              ? Alert.alert('Nhiệt độ đã chuyển sang thang độ F')
+              : Alert.alert('Nhiệt độ đã chuyển sang thang độ C');
+          }}
+          value={fDegree}
         />
       </View>
     </SafeAreaView>
